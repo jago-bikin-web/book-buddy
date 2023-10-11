@@ -13,13 +13,11 @@
 Pada awal **Landing Page**, pengguna akan diarahkan untuk Sign Up akun baru. Saat proses pembuatan akun tersebut, pengguna akan diminta untuk memilih Role untuk akun tersebut. Perincian masing-masing Role adalah sebagai berikut:
 
 ### Role:
-1. **Reguler User**
 
-Pengguna reguler hanya memiliki akses pada fitur MyBuddy, FindBuddy, dan melakukan RSVP pada EventBuddy. Reguler User tidak dapat mengakses ReachBuddy (membuat forum) dan menambah event pada EventBuddy.
 
-2. **Member User**
-
-Member User merupakan versi lebih lengkap dari Member User yang hanya dapat mengakses beberapa modul. Member User dapat bergabung dengan komunitas ReachBuddy, dimana Member User dapat berdiskusi antar sesama Member User. Member User juga dapat menambahkan informasi mengenai kegiatan dan membuka RSVP bagi Reguler User maupun Member User jika ingin mengikuti suatu kegiatan.
+|Reguler User |Member User |
+| --- | --- |
+| Pengguna reguler hanya memiliki akses pada fitur MyBuddy, FindBuddy, dan melakukan RSVP pada EventBuddy. Reguler User tidak dapat mengakses ReachBuddy (membuat forum) dan menambah event pada EventBuddy.| Member User merupakan versi lebih lengkap dari Reguler User yang hanya dapat mengakses beberapa modul. Member User dapat bergabung dengan komunitas ReachBuddy, dimana Member User dapat berdiskusi antar sesama Member User. Member User juga dapat menambahkan informasi mengenai kegiatan dan membuka RSVP bagi Reguler User maupun Member User jika ingin mengikuti suatu kegiatan.|
 
 # Features
 
@@ -59,17 +57,21 @@ Pengguna yang menjadi bagian dari komunitas dapat mengakses dan membuat postinga
 ### 4. EventBuddy (Jadwalkan dan Daftar Acara Buku):
 Dengan “EventBuddy”, pengguna berkesempatan mengikuti kegiatan dengan tema literasi dan buku yang mengagumkan. Pengguna dapat mencari acara buku menarik di berbagai tempat dan mendaftar untuk menghadirinya. Informasi lengkap tentang deskripsi acara, tanggal, lokasi, tema, dan buku yang akan dibahas atau ditampilkan akan membuat pengguna selalu siap untuk acara berikutnya.
 
-#### Reguler User
-Pengguna yang telah masuk ke dalam aplikasi dapat mendaftarkan diri mengikuti kegiatan yang akan dilaksanakan.
-
-#### Member User
-Pengguna yang merupakan bagian dari komunitas dapat menambahkan acara kegiatan yang berkaitan dengan buku dan dapat melihat daftar peserta yang terdaftar pada acara tertentu.
+|Reguler User|Member User|
+| --- | --- |
+|Pengguna yang telah masuk ke dalam aplikasi dapat mendaftarkan diri mengikuti kegiatan yang akan dilaksanakan.| Pengguna yang merupakan bagian dari komunitas dapat menambahkan acara kegiatan yang berkaitan dengan buku dan dapat melihat daftar peserta yang terdaftar pada acara tertentu.|
 
 <hr>
 
 Aplikasi ini dirancang untuk memberdayakan pembaca untuk lebih mendalam dalam eksplorasi buku, terhubung dengan komunitas pembaca, dan berpartisipasi dalam banyak acara yang akan menginspirasi pengguna. Dengan apikasi ini, kami berharap pengguna dapat terpicu untuk ikut serta dalam gerakan membaca buku di Indonesia. Selamat datang di aplikasi kami!
-Sumber Data Set Buku: Google Books API
 
+#### **Pembagian peran** dalam mengerjakan modul masing-masing adalah sebagai berikut:
+1. **My Buddy** - Restu Ahmad Ar Ridho
+2. **Find Buddy** - Gamma Farrel
+3. **Reach Buddy** - Daffa Mohamad Fathoni
+4. **Event Buddy** - Nadhira Widyaniswari
+
+Sumber Data Set Buku: Google Books API
 
 Adapun **Flow Chart** untuk aplikasi ini sebagai berikut:
 
