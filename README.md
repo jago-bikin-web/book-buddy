@@ -1,25 +1,24 @@
 # TUGAS KELOMPOK PROYEK TENGAH SEMESTER PEMROGRAMAN BERBASIS PLATFORM
 
 ### Kelompok E06:
-#### 1. Restu Ahmad Ar Ridho	- 2206028951
-#### 2. Nadhira Widyaniswari 	- 2206811884
-#### 3. Gamma Farrel		    - 2206025035
-#### 4. Daffa Mohamad Fathoni	- 2206824161
+  1. **Restu Ahmad Ar Ridho - 2206028951**
+  2. **Nadhira Widyaniswari - 2206811884**
+  3. **Gamma Farrel - 2206025035**
+  4. **Daffa Mohamad Fathoni - 2206824161**
 
-## **Books Buddy (BB)**
+## Books Buddy (BB)
 
 **Books Buddy** merupakan sebuah aplikasi yang dirancang untuk mendukung gerakan Indonesia membaca dengan menyediakan fitur yang dapat memudahkan pengguna untuk mencari, mengelola dan berbagi informasi mengenai buku sesama pengguna aplikasi. Books Buddy juga memfasilitasi pengguna dengan memberi informasi mengenai kegiatan-kegiatan yang ingin diadakan untuk dipublikasikan di dalam aplikasi sehingga pengguna dapat menemukan kegiatan yang menarik sesuai dengan minatnya.
 
 Pada awal **Landing Page**, pengguna akan diarahkan untuk Sign Up akun baru. Saat proses pembuatan akun tersebut, pengguna akan diminta untuk memilih Role untuk akun tersebut. Perincian masing-masing Role adalah sebagai berikut:
 
-### Role:
-
+## Role
 
 |Reguler User |Member User |
 | --- | --- |
 | Pengguna reguler hanya memiliki akses pada fitur MyBuddy, FindBuddy, dan melakukan RSVP pada EventBuddy. Reguler User tidak dapat mengakses ReachBuddy (membuat forum) dan menambah event pada EventBuddy.| Member User merupakan versi lebih lengkap dari Reguler User yang hanya dapat mengakses beberapa modul. Member User dapat bergabung dengan komunitas ReachBuddy, dimana Member User dapat berdiskusi antar sesama Member User. Member User juga dapat menambahkan informasi mengenai kegiatan dan membuka RSVP bagi Reguler User maupun Member User jika ingin mengikuti suatu kegiatan.|
 
-# Features
+## Features
 
 Adapun fitur utama dalam aplikasi ini adalah sebagai berikut:
 
@@ -34,7 +33,7 @@ Adapun fitur utama dalam aplikasi ini adalah sebagai berikut:
 4. Moduls (MyBuddy, FindBuddy, ReachBuddy, EventBuddy)
 5. FAQ
 
-# Moduls
+## Moduls
 
 ### 1. MyBuddy (Koleksi Buku):
 Pada modul “MyBuddy” pengguna dengan mudah melacak dan mengelola koleksi buku pribadinya. Pengguna dapat memfilter koleksi bukunya sesuai keinginan seperti buku yang dimiliki, yang ingin dibaca, dan sedang dibaca. Pada setiap buku terdapat informasi mengenai judul buku dan ulasan yang diberikan oleh pengguna serta track page.
@@ -71,7 +70,7 @@ Aplikasi ini dirancang untuk memberdayakan pembaca untuk lebih mendalam dalam ek
 3. **Reach Buddy** - Daffa Mohamad Fathoni
 4. **Event Buddy** - Nadhira Widyaniswari
 
-Sumber Data Set Buku: Google Books API
+Sumber Data Set Buku: **Google Books API**
 
 Adapun **Flow Chart** untuk aplikasi ini sebagai berikut:
 
