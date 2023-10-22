@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class Book(models.Model):
-    id = models.CharField(max_length=255, primary_key=True)
+    book_id = models.CharField(max_length=255)
     etag = models.CharField(max_length=255)
     self_link = models.URLField(max_length=255)
 
@@ -59,7 +59,7 @@ class Book(models.Model):
 
 
         return cls(
-            id=book_json.get("id"),
+            book_id=book_json.get("id"),
             etag=book_json.get("etag"),
             self_link=book_json.get("selfLink", ""),
             title=volume_info.get("title", ""),

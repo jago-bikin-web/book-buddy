@@ -84,6 +84,7 @@ def add_book_from_google_books_api(request):
     api_url = f"https://www.googleapis.com/books/v1/volumes?q=random&orderBy=newest&key={api_key}&maxResults=40"
     response = requests.get(api_url)
 
+    data_books = Book.objects.all()
     if response.status_code == 200:
         book_data = json.loads(response.text)
         
@@ -97,10 +98,11 @@ def add_book_from_google_books_api(request):
         return JsonResponse({'message': 'Gagal mengambil data dari API Google Books.'}, status=400)
     
     data_books = Book.objects.all()
-    print(len(data_books))
+    print("Dalam database sudah ada:",len(data_books),"buku.")
     return JsonResponse({'message': 'Data buku berhasil dimasukkan ke dalam database.'})
 
     
 def get_books(request):
-    books = Book.objects.all()
-    return HttpResponse(serializers.serialize("json", books), content_type="application/json")
+    data_books = Book.objects.all()
+    print("Dalam database sudah ada:",len(data_books),"buku.")
+    return HttpResponse(serializers.serialize("json", data_books), content_type="application/json")
