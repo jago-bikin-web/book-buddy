@@ -19,3 +19,18 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-color);
 }
+
+.nav:after {
+  content: "";
+  position: absolute;
+  background-color: #FDD835;
+  height: 3px;
+  width: 0;
+  left: 0;
+  bottom: -4px;
+  transition: 0.4s;
+}
+
+.nav:hover:after {
+  width: 100%;
+}
