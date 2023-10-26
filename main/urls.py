@@ -1,6 +1,5 @@
 from django.urls import path, include
 from main.views import *
-from eventbuddy.views import show_eventbuddy
 
 
 app_name = 'main'
