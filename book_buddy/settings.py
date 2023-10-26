@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'book',
     'main',
     'findbuddy',
+    'mybuddy',
+    'eventbuddy',
 ]
 
 MIDDLEWARE = [
