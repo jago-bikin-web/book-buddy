@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'book',
     'main',
+    'mybuddy',
+    'eventbuddy',
     'reachbuddy'
 ]
 

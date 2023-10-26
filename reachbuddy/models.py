@@ -5,7 +5,7 @@ from book.models import Book
 # Create your models here.
 
 class Thread(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE) #NANTI PAS RESTU UDAH KELAR REGIS DAN VIEWS USERNYA
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     review = models.TextField()
