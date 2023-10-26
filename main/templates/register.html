@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Register</title>
+{% endblock meta %}
+
+{% block content %}  
+
+<body>  
+
+    <h2>Sign Up to TraveLoGue</h2>
+    <form method="POST" action="">
+        {% csrf_token %}  
+        <div class="container w-75">
+            <table>{{ form }}
+                <div class="form-group py-4">
+                    <input class="btn btn-primary w-100" type="submit" value="Sign Up">
+                </div>
+            </table>
+        </div>
+    </form> 
+    {% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+
+    <p class="pb-4">
+        <a href="/login">Already have an account? Log in</a>
+    </p> 
+</body>
+
+{% endblock content %}

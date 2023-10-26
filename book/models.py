@@ -51,10 +51,10 @@ class Book(models.Model):
         published_date=volume_info.get("publishedDate")
         try:
             published_date = datetime.strptime(published_date, '%Y-%m-%d').date()
-        except ValueError:
+        except :
             try:
                 published_date = datetime.strptime(published_date, '%Y').date()
-            except ValueError:
+            except :
                 published_date = datetime(1, 1, 1).date()
 
 
