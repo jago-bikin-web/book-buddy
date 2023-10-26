@@ -29,3 +29,4 @@ def get_event_json(request):
     events = Event.objects.all()
     return HttpResponse(serializers.serialize('json', events))
 
+# Create your views here.
