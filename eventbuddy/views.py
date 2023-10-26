@@ -28,4 +28,3 @@ def create_event(request):
 def get_event_json(request):
     events = Event.objects.all()
     return HttpResponse(serializers.serialize('json', events))
-
