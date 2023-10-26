@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
@@ -21,6 +21,7 @@ def login_user(request):
             return response
         else:
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+            return redirect('main:login')
     context = {}
     return render(request, 'login.html', context)
 
