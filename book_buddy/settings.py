@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'book',
     'main',
     'mybuddy'
+    'eventbuddy',
 ]
 
 MIDDLEWARE = [
