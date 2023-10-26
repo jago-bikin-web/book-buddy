@@ -74,4 +74,4 @@ Sumber Data Set Buku: **Google Books API**
 
 Adapun **Flow Chart** untuk aplikasi ini sebagai berikut:
 
-![flowchart](https://cdn.discordapp.com/attachments/1161615088172683358/1161615193793634315/1697020767820.jpg?ex=6538f173&is=65267c73&hm=6e15ce7581f449bd4da999747f4a200e6245773ef55cd6bbc72a48e35a914d91&)
+![flowchart](./static/img/flowchart.jpg)
