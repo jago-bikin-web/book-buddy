@@ -8,6 +8,9 @@ class Event(models.Model):
     name = models.CharField(max_length=255)
     date = models.DateField()
     description = models.TextField()
+
+    def count(self):
+        return Registration.objects.filter(event=self).count()
     
 class Registration(models.Model):
     #user = models.ForeignKey(User, on_delete=models.CASCADE)
