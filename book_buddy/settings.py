@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'main',
     'mybuddy',
     'eventbuddy',
+    'reachbuddy',
 ]
 
 MIDDLEWARE = [
