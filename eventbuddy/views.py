@@ -7,5 +7,5 @@ def show_eventbuddy(request):
     context = {
         'events' : events,
     }
-    return render(request, "main.html", context)
+    return render(request, "eventbuddy.html", context)
 # Create your views here.

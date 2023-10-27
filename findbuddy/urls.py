@@ -2,7 +2,7 @@ from django.urls import path, include
 from findbuddy.views import *
 
 
-app_name = 'main'
+app_name = 'findbuddy'
 
 
 urlpatterns = [
