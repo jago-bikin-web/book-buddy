@@ -7,6 +7,12 @@ from django.core import serializers
 
 from .models import Book
 
+
+def get_random_books(request):
+    items = Book.objects.all().order_by('?')[:3]
+    return HttpResponse(serializers.serialize('json', items))
+
+
 def add_book_from_google_books_api(request):
     api_key = "AIzaSyAw208PayHnE8-2khMn5JLGL9bCJTMXJFg"
 

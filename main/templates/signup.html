@@ -3,23 +3,27 @@
 <!--  Load static files -->
 {% load static %} 
 
+{% block framework %}
+  <script src="https://cdn.tailwindcss.com"></script>
+{% endblock %}
+
 {% block meta %}
 <title>Sign Up | Books Buddy</title>
 <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" />
-{% endblock %} 
+{% endblock %}
 
 {% block content %}
-<div class="min-h-screen py-14" style="background: #eee;">
+<div class="min-h-screen py-12" style="background: #eee;">
   <div class="container mx-auto">
     <div class="flex flex-col lg:flex-row w-10/12 lg:w-8/12 bg-white rounded-xl mx-auto shadow-lg overflow-hidden">
-      <div class="w-full lg:w-1/2 flex flex-col items-center justify-center p-12 bg-no-repeat bg-cover bg-center" style="background: linear-gradient(to right, #e9cf25, #dda90e, #be7521, #995507);">
-        <h4 class="text-white text-3xl mb-3">Books Buddy</h4>
+      <div class="w-full lg:w-1/2 flex flex-col items-center justify-center p-12 bg-no-repeat bg-cover bg-center gradient-custom">
+        <h4 class="text-white text-3xl mb-3 font-bold">Books Buddy</h4>
         <div>
           <p class="text-white">Discover, Connect, and Explore the World of Books. Books Buddy is your literary companion on your reading journey. So, what are you waiting for? Start exploring, connecting, and expanding your literary horizons with us today!</p>
         </div>
       </div>
       <div class="w-full lg:w-1/2 py-12 px-12">
-        <div class="w-32 mx-auto">
+        <div class="w-32">
           <a href="{% url 'main:landing_page' %}">
             <img src="{% static 'img/logo2.png' %}" style="width: 185px;" alt="logo">
           </a>
@@ -75,7 +79,8 @@
             </div>
           </div>
           <div class="mt-5">
-            <button class="w-full bg-yellow-600 py-3 text-center text-white rounded-md">Register Now</button>
+            <button class="w-full gradient-custom py-3 text-center text-white rounded-md">Register Now</button>
+            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500">Already have an account? <a href="{% url 'main:login' %}" class="font-medium text-yellow-600 underline">login</a>.</p>
           </div>
         </form>
       </div>
