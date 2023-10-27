@@ -37,7 +37,7 @@ class Book(models.Model):
     accessViewStatus = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.title
 
     @classmethod
     def create_from_json(cls, book_json):

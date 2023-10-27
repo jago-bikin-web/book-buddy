@@ -14,21 +14,22 @@ import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from book.models import Book
 
 # Create your views here.
 
 def show_findbuddy(request):
     books = Book.objects.all()
 
-    # if 'last_login' in request.COOKIES:
-    #     last_login = request.COOKIES['last_login']
-    # else:
-    #     last_login = 'N/A'
+    categories = set([book.categories for book in books])
     
     context = {
         'name' : 'Gamma',
         'books' : books,
+        'categories': categories,
     }
+    context = {'categories': categories}
+
 
     return render(request, "findbuddy.html", context)
 
