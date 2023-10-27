@@ -5,4 +5,5 @@ app_name = 'reachbuddy'
 
 urlpatterns = [
     path('', show_reachbuddy, name='show_reachbuddy'),
+    path('create-thread', create_thread, name='create_thread'),
 ]

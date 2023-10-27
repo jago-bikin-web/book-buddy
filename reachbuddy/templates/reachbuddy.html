@@ -5,19 +5,51 @@
 
 {% block meta %}
 <title>Reach Buddy | Books Buddy</title>
+{% endblock %}
+
+{% block framework %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'css/reachbuddy.css' %}" type="text/css"/>
 {% endblock %}
 
 {% block content %}
 
-{% include 'header.html' %}
 
-<div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-    <div class="text-center">
-      <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Welcome to <br>Reach Buddy, {{ name }}</h1>
+<div class="container text-center mt-5">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="display-4 font-weight-bold text-dark">Welcome to <br>Reach Buddy, {{ name }}</h1>
     </div>
+  </div>
 </div>
 
-{% include 'footer.html' %}
+<table>
+  <tr>
+      <th>Name</th>
+      <th>Review</th>
+      <th>Date</th>
+      <th>Likes</th>
+  </tr>
+
+  {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+
+  {% for thread in threads %}
+      <tr>
+        <td>{{ name }}</td>
+        <td>{{ thread.review }}</td>
+        <td>{{ thread.date_added }}</td>
+        <td>{{ thread.likes }}</td>
+      </tr>
+  {% endfor %}
+</table>
+
+<br />
+
+<a href="{% url 'reachbuddy:create_thread' %}">
+  <button>
+      Post a Thread
+  </button>
+</a>
+
 
 {% endblock content %}
