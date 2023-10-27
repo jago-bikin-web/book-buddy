@@ -24,7 +24,7 @@ urlpatterns = [
     path('api/', include('book.urls')),
     path('', include('main.urls')),
     path('eventbuddy/', include('eventbuddy.urls')),
-    path('reachbuddy/', include('reachbuddy.urls'))
+    path('reachbuddy/', include('reachbuddy.urls')),
 ]
 
 # if settings.DEBUG:
