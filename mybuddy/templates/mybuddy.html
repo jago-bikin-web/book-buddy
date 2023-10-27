@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 
 <!--  Load static files -->
-{% load static %} {% block framework %}
+{% load static %} 
+
+{% block framework %}
 <script src="https://cdn.tailwindcss.com"></script>
-{% endblock %} {% block meta %}
-<title>Books Buddy</title>
+{% endblock %} 
+
+{% block meta %}
+<title>MyBuddy | Books Buddy</title>
 <link rel="stylesheet" href="{% static 'css/mybuddy.css' %}" type="text/css" />
-{% endblock %} {% block content %} {% include 'header.html' %}
+{% endblock %} 
+
+{% block content %} 
+
+{% include 'header.html' %}
 
 <div class="bg-white h-max">
   <div class="isolate px-6 lg:px-8">
