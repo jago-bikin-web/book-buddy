@@ -15,29 +15,24 @@ from main.models import Profile
 
 
 def show_landing_page(request):
-    user = request.COOKIES.get('user', None)
-
-    if user != None:
-        print(user)
-        user = Profile.objects.get(full_name=user)
+    
+    context = {
+        'user': None,
+        'profile_picture': None
+    }
+    if request.user.is_authenticated:
+        user = Profile.objects.get(user=request.user)
         profile_picture = user.profile_picture
         context = {
             'user': user.full_name,
             'profile_picture': profile_picture
         }
-    else:
-        print("as")
-        context = {
-            'user': None
-        }
 
     return render(request, "main.html", context)
 
-@login_required(login_url='/login')
+@login_required(login_url='main:login')
 def home(request):
-    user = request.COOKIES.get('user', None)
-
-    user = Profile.objects.get(full_name=user)
+    user = Profile.objects.get(user=request.user)
     profile_picture = user.profile_picture
 
     context = {
@@ -66,10 +61,14 @@ def register_user(request):
         else:
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
             return redirect('main:register')
-
-    return render(request, 'signup.html')
+    
+    if request.user.is_authenticated:
+        return redirect('main:home')
+    else:
+        return render(request, 'signup.html')
 
 def login_user(request):
+    next = request.GET.get('next', None)
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -78,14 +77,20 @@ def login_user(request):
         if user is not None:
             login(request, user)
             user_login = Profile.objects.get(user=user)
-            response = HttpResponseRedirect(reverse("main:home"))
+            if next:
+                response = HttpResponseRedirect(next)
+            else:
+                response = HttpResponseRedirect(reverse(f"main:home"))
             response.set_cookie('user', user_login.full_name)
             return response
         else:
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
             return redirect('main:login')
-    context = {}
-    return render(request, 'login.html', context)
+        
+    if request.user.is_authenticated:
+        return redirect('main:home')
+    else:
+        return render(request, 'login.html')
 
 
 def logout_user(request):

@@ -27,7 +27,7 @@ body {
 .nav:after {
   content: "";
   position: absolute;
-  background-color: #FDD835;
+  background-color: #FBC02D;
   height: 3px;
   width: 0;
   left: 0;
