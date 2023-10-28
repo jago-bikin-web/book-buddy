@@ -22,7 +22,7 @@ class UpdateForm(forms.ModelForm):
     )
     
     ulasan = forms.CharField(
-        required= True,
+        required= False,
         widget= forms.Textarea(attrs= {
             "class": "ulasan block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 bg-slate-200 border-gray-600 dark:placeholder-gray-400 text-grey-900 dark:focus:ring-primary-500 dark:focus:border-primary-500",
             "rows":5,

@@ -12,22 +12,29 @@ from mybuddy.models import OwnedBook
 
 from mybuddy.forms import UpdateForm
 
+
 @csrf_exempt
 def update_own_book(request):
     if request.method == "POST":
+        
         form = UpdateForm(request.POST)
         if form.is_valid():
             pk_buku = request.COOKIES.get('book_update')
             buku = OwnedBook.objects.get(pk=pk_buku)
             buku_asli = Book.objects.get(pk=buku.owned_book.pk)
 
-            page_track = int(request.POST.get('page_track'))
+            try:
+                page_track = int(request.POST.get('page_track'))
+            except ValueError:
+                page_track = buku.page_track
             status = request.POST.get('status')
             ulasan = request.POST.get('ulasan')
 
             if buku_asli.page_count < page_track:
                 page_track = buku_asli.page_count
-                status = "F"
+                status = 'F'
+            elif page_track <= 0:
+                page_track = 0
             
             buku.page_track = page_track
             buku.status = status
@@ -86,7 +93,7 @@ def add_buddy(request):
         book = Book.objects.get(pk=data["pk"])
         
         new_book = OwnedBook(user=user, owned_book=book, page_track=0, ulasan="", status="W")
-        # new_book.save()
+        new_book.save()
         return HttpResponse("ADDED",status=201)
     return render(request, "addbuddy.html", context)
 
@@ -111,10 +118,30 @@ def get_owned_book(request):
         if each_data['status'] == 'W':
             each_data['status'] = 'Wishlist'
         elif each_data['status'] == 'F':
-            each_data['status'] == 'Finish'
+            each_data['status'] = 'Finish'
         else:
-            each_data['status'] == 'Reading'
+            each_data['status'] = 'Reading'
         data.append(each_data)
 
     return HttpResponse(json.dumps(data), content_type="application/json")
 
+@csrf_exempt
+def add_page_track(request):
+    data = json.loads(request.body.decode("utf-8"))
+    buku = OwnedBook.objects.get(pk=data["pk"])
+    buku_asli = Book.objects.get(pk=buku.owned_book.pk)
+
+    if buku.page_track < buku_asli.page_count:
+        buku.page_track += 1
+        buku.save()
+    return HttpResponse(status=200)
+
+@csrf_exempt
+def sub_page_track(request):
+    data = json.loads(request.body.decode("utf-8"))
+    buku = OwnedBook.objects.get(pk=data["pk"])
+
+    if buku.page_track > 0:
+        buku.page_track -= 1
+        buku.save()
+    return HttpResponse(status=200)

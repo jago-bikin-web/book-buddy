@@ -9,5 +9,7 @@ urlpatterns = [
     path('', show_my_buddy, name='my_buddy'),
     path('add-buddy/', add_buddy, name='add_buddy'),
     path('get-own-book/', get_owned_book, name='get_owned_book'),
-    path('update-own-book/', update_own_book, name='update_own_book')
+    path('update-own-book/', update_own_book, name='update_own_book'),
+    path('add-page-track/', add_page_track, name='add_page_track'),
+    path('sub-page-track/', sub_page_track, name='sub_page_track'),
 ]
