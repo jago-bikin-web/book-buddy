@@ -12,3 +12,6 @@ class OwnedBook(models.Model):
 
     # R = lagi dibaca, F = finish, W = wistlish
     status = models.CharField(max_length=1)
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.owned_book.title}"

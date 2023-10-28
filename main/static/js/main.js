@@ -49,6 +49,6 @@ async function refreshBooks() {
   $(".bookshelf").html(stringAdd);
 }
 
-if (window.location.href.indexOf("home") != -1) {
+if (window.location.pathname.indexOf("home") != -1) {
   refreshBooks();
 }

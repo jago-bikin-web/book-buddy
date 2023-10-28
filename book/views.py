@@ -7,6 +7,17 @@ from django.core import serializers
 
 from .models import Book
 
+def get_search_books(request):
+
+    if request.method == 'GET':
+        query = request.GET.get('query', '')
+        if query == "get_random":
+            results = Book.objects.all().order_by('?')[:3]
+        else:   
+            results = Book.objects.filter(title__contains=query)[:6]
+        
+        return HttpResponse(serializers.serialize('json', results))
+
 
 def get_random_books(request):
     items = Book.objects.all().order_by('?')[:3]
