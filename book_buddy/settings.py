@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'book',
     'main',
+    'findbuddy',
     'mybuddy',
     'eventbuddy',
+    'reachbuddy',
 ]
 
 MIDDLEWARE = [
