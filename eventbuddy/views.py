@@ -29,4 +29,19 @@ def get_event_json(request):
     events = Event.objects.all()
     return HttpResponse(serializers.serialize('json', events))
 
+def edit_event(request, id):
+    # Get product berdasarkan ID
+    events = Event.objects.get(pk = id)
+
+    # Set product sebagai instance dari form
+    form = EventForm(request.POST or None, instance=events)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('eventbuddy:show_eventbuddy'))
+
+    context = {'form': form}
+    return render(request, "edit_event.html", context)
+
 # Create your views here.

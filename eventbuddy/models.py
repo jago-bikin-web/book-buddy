@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from book.models import Book
 
 class Event(models.Model):
-    buku = models.OneToOneField(Book, on_delete=models.CASCADE, unique=True)
+    #buku = models.OneToOneField(Book, on_delete=models.CASCADE, unique=True)
     #user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255)
     date = models.DateField()
