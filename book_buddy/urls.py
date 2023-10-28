@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('main.urls')),
     path('mybuddy/', include('mybuddy.urls')),
     path('eventbuddy/', include('eventbuddy.urls')),
+    path('findbuddy/', include('findbuddy.urls')),
     path('reachbuddy/', include('reachbuddy.urls')),
 ]
 
