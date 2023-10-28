@@ -23,7 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('book.urls')),
     path('', include('main.urls')),
+    path('mybuddy/', include('mybuddy.urls')),
     path('eventbuddy/', include('eventbuddy.urls')),
+    path('findbuddy/', include('findbuddy.urls')),
+    path('reachbuddy/', include('reachbuddy.urls')),
 ]
 
 # if settings.DEBUG:

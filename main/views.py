@@ -3,17 +3,44 @@ from random import randint
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.urls import reverse
-
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
+
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from main.models import Profile
 
 
 def show_landing_page(request):
-    return render(request, "main.html")
+    
+    context = {
+        'user': None,
+        'profile_picture': None
+    }
+    if request.user.is_authenticated:
+        user = Profile.objects.get(user=request.user)
+        profile_picture = user.profile_picture
+        context = {
+            'user': user.full_name,
+            'profile_picture': profile_picture
+        }
+
+    return render(request, "main.html", context)
+
+@login_required(login_url='main:login')
+def home(request):
+    user = Profile.objects.get(user=request.user)
+    profile_picture = user.profile_picture
+
+    context = {
+        'user': user.full_name,
+        'profile_picture': profile_picture
+    }
+
+    return render(request, "home.html", context)
 
 def register_user(request):
     if request.method == 'POST':
@@ -27,17 +54,21 @@ def register_user(request):
         if password1 == password2:
             user = User.objects.create_user(username=username, password=password1)
             
-            new_user = Profile(user=user, full_name=full_name, email=email, status=status, profile_picture=f"https://i.pravatar.cc/48?={randint(0,100)}")
+            new_user = Profile(user=user, full_name=full_name, email=email, status=status, profile_picture=f"https://i.pravatar.cc/48?img={randint(1,70)}")
 
             new_user.save()
             return redirect('main:login')
         else:
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
             return redirect('main:register')
-
-    return render(request, 'signup.html')
+    
+    if request.user.is_authenticated:
+        return redirect('main:home')
+    else:
+        return render(request, 'signup.html')
 
 def login_user(request):
+    next = request.GET.get('next', None)
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -45,17 +76,26 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            response = HttpResponseRedirect(reverse("main:landing_page"))
-            response.set_cookie('user', user)
+            user_login = Profile.objects.get(user=user)
+            if next:
+                response = HttpResponseRedirect(next)
+            else:
+                response = HttpResponseRedirect(reverse(f"main:home"))
+            response.set_cookie('user', user_login.full_name)
             return response
         else:
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
             return redirect('main:login')
-    context = {}
-    return render(request, 'login.html', context)
+        
+    if request.user.is_authenticated:
+        return redirect('main:home')
+    else:
+        return render(request, 'login.html')
 
 
 def logout_user(request):
     logout(request)
-    response = HttpResponseRedirect(reverse('main:login'))
+    response = HttpResponseRedirect(reverse('main:landing_page'))
+    response.delete_cookie('user')
+    response.delete_cookie('profile_picture')
     return response
