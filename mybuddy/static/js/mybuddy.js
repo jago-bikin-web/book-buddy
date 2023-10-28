@@ -50,8 +50,9 @@ async function refreshOwnBooks() {
         <div class="w-full mt-1">
           <button
             type="button"
-            class="block w-full rounded bg-yellow-500 px-6 pb-2 pt-2.5 text-xs font-bold uppercase leading-normal text-white">
-            Tambah Ulasan
+            class="block w-full rounded bg-yellow-500 px-6 pb-2 pt-2.5 text-xs font-bold uppercase leading-normal text-white"
+            onClick="showModal(${item.pk})">
+            Ubah Koleksi
           </button>
         </div>
       </div>
@@ -62,7 +63,42 @@ async function refreshOwnBooks() {
   $(".bookshelf-mybuddy").html(stringAdd);
 }
 
+function showModal(id) {
+  $(".modal-update").removeClass("hidden")
+  fetch('/mybuddy/', {
+    method: "PUT",
+    body: JSON.stringify({
+      pk: id
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  }).then(res => console.log(res.json()))
+}
+
+function closeModal() {
+  $(".modal-update").addClass("hidden")
+  $(".page-track").val(0)
+  $(".status").val("W")
+  $(".ulasan").val("")
+}
+
 $(document).ready(()=>{
+  $(".btn-close").click(() => {
+    closeModal()
+  })
+  
+  $(".btn-submit").click(() => {
+    const form = document.querySelector("#form-update")
+    const formData = new FormData(form);
+    fetch("/mybuddy/update-own-book/", {
+        method: "POST",
+        body: formData
+    }).then(res => {
+      refreshOwnBooks();
+      closeModal();
+    })
+  })
 
   $("#search-book").on("input", function() {
     const query = $(this).val();
