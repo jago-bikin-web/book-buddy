@@ -112,3 +112,9 @@ def get_books(request):
     data_books = Book.objects.all()
     print("Dalam database sudah ada:",len(data_books),"buku.")
     return HttpResponse(serializers.serialize("json", data_books), content_type="application/json")
+
+
+def book_list(request):
+    categories = Book.categories.objects.all()  # Ambil semua kategori buku
+    context = {'categories': categories}
+    return render(request, 'book/book_list.html', context)
