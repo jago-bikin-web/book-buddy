@@ -10,45 +10,50 @@
 
 {% block content %}
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Event</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="form" onsubmit="return false;">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="name" class="col-form-label">Name:</label>
-                        <input type="text" class="form-control" id="name" name="name"></input>
-                    </div>
-                    <div class="mb-3">
-                        <label for="date" class="col-form-label">Date:</label>
-                        <input type="date" class="form-control" id="date" name="date"></input>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="col-form-label">Description:</label>
-                        <textarea class="form-control" id="description" name="description"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Event</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="event_cards" class="all-product d-flex flex-wrap align-content-start gap-4"></div>
-
-
-<button type="button" class="bg-green-500 text-white px-2 py-1 rounded-lg hover:bg-green-600 transition duration-300" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product</button>
-
-
 {% include 'header.html' %}
+
+
+<div class="bg-white h-screen">
+    <div class="isolate px-6 lg:px-8">
+      <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+      </div>
+        <div class="container mx-auto my-4 py-32 sm:py-48 lg:py-56">
+          <div class="section-header">
+            <div class="section-title"><h1 class="font-BPGBannerCaps font-bold tracking-wide">Events in Book Buddy</h1></div>
+            <hr class="mb-4 h-px border-0 bg-gray-400 dark:bg-gray-700" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for event in events %}
+            <div class="max-w-4xl border bg-white rounded relative">
+              <a href="#"><img src="https://images.unsplash.com/photo-1635695604201-2b718204bccb" alt="" class="h-[12.5rem] w-full object-cover" /></a>
+              <div class="p-5">
+                <a href="#">
+                  <h5 class="font-NotoSansGeo mb-2 text-lg font-bold leading-normal md:text-xl">{{ event.name }}</h5>
+                </a>
+                <p class="mb-3 text-sm font-normal leading-normal text-gray-700 dark:text-gray-400">Date: {{ event.date }}</p>
+                <p class="mb-3 text-sm font-normal leading-normal text-gray-700 dark:text-gray-400">{{ event.description }}</p>
+              </div>
+              <div class="absolute top-40 left-0 bottom-0 m-4">
+                <a href="{% url 'eventbuddy:edit_event' event.pk %}" class="rounded-md bg-yellow-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Edit</a>
+                <a href="{% url 'eventbuddy:edit_event' event.pk %}" class="rounded-md bg-yellow-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Attendees</a>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          
+          
+          <div class="mt-4">
+            <a href="{% url 'eventbuddy:create_event' %}" class="rounded-md bg-yellow-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Event</a>
+          </div>
+        </div>
+        
+        </div>
+      <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
+        <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+      </div>
+    </div>
+  </div>  
 
 {% include 'footer.html' %}
 
