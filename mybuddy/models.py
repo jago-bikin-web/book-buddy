@@ -10,7 +10,7 @@ class OwnedBook(models.Model):
     page_track = models.IntegerField()
     ulasan = models.TextField()
 
-    # R = lagi dibaca, F = finish, W = wistlish
+    # R = lagi dibaca, F = finish, W = wishlist
     status = models.CharField(max_length=1)
 
     def __str__(self):

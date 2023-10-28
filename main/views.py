@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from main.models import Profile
+from mybuddy.models import OwnedBook
 
 
 def show_landing_page(request):
@@ -34,10 +35,12 @@ def show_landing_page(request):
 def home(request):
     user = Profile.objects.get(user=request.user)
     profile_picture = user.profile_picture
+    banyak_buku = len(OwnedBook.objects.filter(user=user))
 
     context = {
         'user': user.full_name,
-        'profile_picture': profile_picture
+        'profile_picture': profile_picture,
+        'buku' : banyak_buku
     }
 
     return render(request, "home.html", context)
