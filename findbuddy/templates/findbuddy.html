@@ -73,20 +73,9 @@
     .filter-dropdown {
         margin-right: 10px;
     }
-
-    .show-filters-button {
-        cursor: pointer;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        margin-right: 10px;
-    }
 </style>
 
 <div class="filter-container" id="filter-container">
-    <button id="show-filters" class="show-filters-button">Show Filters</button>
 
     <div class="filter-dropdown">
         <label for="category-filter">Filter by Category:</label>
@@ -109,6 +98,7 @@
             <option value="5">5 Stars</option>
         </select>
     </div>
+    <button id="filter-button" class="show-filters-button">Filter</button>
 </div>
 
 <div id="product_cards" class="custom-card"></div>
@@ -213,27 +203,23 @@
     function scrollToTop() {
         window.scrollTo(0, 0);
     }
+    
 
     function applyFilters() {
-        const categoryFilter = document.getElementById("category-filter").value;
-        const ratingFilter = document.getElementById("rating-filter").value;
+        const selectedCategory = document.getElementById("category-filter").value;
+        const selectedRating = document.getElementById("rating-filter").value;
 
-        // Filter products based on category and rating
-        const filteredProducts = products.filter((product) => {
-            if (categoryFilter && !product.fields.categories.includes(categoryFilter)) {
-                return false;
-            }
+        // Filter products based on selected filters
+        let filteredProducts = products;
 
-            if (ratingFilter) {
-                const selectedRating = parseInt(ratingFilter);
-                const productRating = Math.floor(product.fields.average_rating);
-                if (selectedRating !== productRating) {
-                    return false;
-                }
-            }
+        if (selectedCategory) {
+            filteredProducts = filteredProducts.filter(product => product.fields.categories === selectedCategory);
+        }
 
-            return true;
-        });
+        if (selectedRating) {
+            const selectedRatingValue = parseInt(selectedRating);
+            filteredProducts = filteredProducts.filter(product => Math.floor(product.fields.average_rating) === selectedRatingValue);
+        }
 
         // Update products and reset currentPage to 1
         products = filteredProducts;
@@ -244,22 +230,94 @@
         renderPagination();
     }
 
-    document.getElementById("category-filter").addEventListener("change", applyFilters);
+    // Function to fetch products based on category
+    async function updateProductsByCategory() {
+        const selectedCategory = document.getElementById("category-filter").value;
+        if (selectedCategory) {
+            const newProducts = await getProductsByCategory(selectedCategory);
+            products = newProducts;
+            currentPage = 1;
+            renderCurrentPage();
+            renderPagination();
+        }
+    }
+
+    async function getProductsByCategory(category) {
+        try {
+            const response = await fetch(`{% url 'findbuddy:get_book_json' %}?category=${category}`);
+            if (response.ok) {
+                const newProducts = await response.json();
+                return newProducts;
+            } else {
+                console.error("Failed to fetch products by category.");
+            }
+        } catch (error) {
+            console.error("An error occurred while fetching products:", error);
+        }
+    }
+
+    // function applyFilters() {
+    //     const selectedRating = document.getElementById("rating-filter").value;
+
+    //     // Filter products based on selected rating
+    //     let filteredProducts = products;
+
+    //     if (selectedRating) {
+    //         const selectedRatingValue = parseInt(selectedRating);
+    //         filteredProducts = filteredProducts.filter(product => Math.floor(product.fields.average_rating) === selectedRatingValue);
+    //     }
+
+    //     // Update products and reset currentPage to 1
+    //     products = filteredProducts;
+    //     currentPage = 1;
+
+    //     renderCurrentPage();
+    //     renderPagination();
+    // }
+
+
+
+    // function applyFilters() {
+    //     const categoryFilter = document.getElementById("category-filter").value;
+    //     const ratingFilter = document.getElementById("rating-filter").value;
+
+    //     // Filter products based on category and rating
+    //     const filteredProducts = products.filter((product) => {
+    //         if (categoryFilter && product.fields.categories !== categoryFilter) {
+    //             return false;
+    //         }
+
+    //         if (ratingFilter) {
+    //             const selectedRating = parseInt(ratingFilter);
+    //             const productRating = Math.floor(product.fields.average_rating);
+    //             if (selectedRating !== productRating) {
+    //                 return false;
+    //             }
+    //         }
+
+    //         return true;
+    //     });
+
+    //     // Update products and reset currentPage to 1
+    //     products = filteredProducts;
+    //     currentPage = 1;
+
+    //     // Render the updated page and pagination
+    //     renderCurrentPage();
+    //     renderPagination();
+    // }
+
+    document.getElementById("category-filter").addEventListener("change", updateProductsByCategory);
     document.getElementById("rating-filter").addEventListener("change", applyFilters);
 
-    const showFiltersButton = document.getElementById("show-filters");
-    const filterContainer = document.getElementById("filter-container");
-
-    showFiltersButton.addEventListener("click", () => {
-        if (filterContainer.style.display === "none" || filterContainer.style.display === "") {
-            filterContainer.style.display = "flex";
-        } else {
-            filterContainer.style.display = "none";
-        }
+    const filterButton = document.getElementById("filter-button");
+    filterButton.addEventListener("click", () => {
+        applyFilters();
     });
 
+    const filterContainer = document.getElementById("filter-container");
+
     getProducts().then((data) => {
-        console.log(data);
         products = data;
         renderCurrentPage();
         renderPagination();

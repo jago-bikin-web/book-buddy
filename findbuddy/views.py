@@ -13,14 +13,14 @@ import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from findbuddy.models import FindBook
+from book.models import Book
 
 # Create your views here.
 
 def show_findbuddy(request):
-    books = FindBook.objects.all()
+    books = Book.objects.all()
 
-    categories = set([categories for book in books])
+    categories = set([book.categories for book in books])
     
     context = {
         'name' : 'Gamma',
@@ -28,9 +28,8 @@ def show_findbuddy(request):
         'categories': categories,
     }
 
-
     return render(request, "findbuddy.html", context)
 
 def get_book_json(request):
-    book_item = FindBook.objects.all()
+    book_item = Book.objects.all()
     return HttpResponse(serializers.serialize('json', book_item))
