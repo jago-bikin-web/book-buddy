@@ -20,19 +20,19 @@ def show_reachbuddy(request):
 
     return render(request, "reachbuddy.html", context)
 
-# def create_thread(request):
-#     form = ThreadForm(request.POST or None)
-#     books = Book.objects.all()
+def create_thread(request):
+    form = ThreadForm(request.POST or None)
+    books = Book.objects.all()
 
-#     if form.is_valid() and request.method == "POST":
-#         form.save()
-#         return HttpResponseRedirect(reverse('reachbuddy:show_reachbuddy'))
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('reachbuddy:show_reachbuddy'))
 
-#     context = {
-#         'form': form,
-#         'books': books
-#     }
-#     return render(request, "create_thread.html", context)
+    context = {
+        'form': form,
+        'books': books
+    }
+    return render(request, "create_thread.html", context)
 
 def show_json(request):
     data = Thread.objects.all()
