@@ -20,11 +20,11 @@ async function refreshOwnBooks() {
           <p class="relative z-10 rounded-full bg-yellow-500 px-3 py-1.5 font-medium text-white hover:bg-gray-100">${item.status}</p>
 
           <div class="flex">
-            <button class="bg-yellow-500 text-white font-bold text-md px-3 py-1.5 rounded-full hover:shadow-md outline-none"> - </button>
+            <button class="bg-yellow-500 text-white font-bold text-md px-3 py-1.5 rounded-full hover:shadow-md outline-none" type="button" onClick="subPage(${item.pk})"> - </button>
             <p class="bg-yellow-500 text-white mx-1 font-bold text-md px-3 py-1.5 rounded-full">
               ${item.page_track}
             </p>
-            <button class="bg-yellow-500 text-white font-bold text-md px-3 py-1.5 rounded-full hover:shadow-md outline-none" type="button"> + </button>
+            <button class="bg-yellow-500 text-white font-bold text-md px-3 py-1.5 rounded-full hover:shadow-md outline-none" type="button" onClick="addPage(${item.pk})"> + </button>
           </div>
         </div>
         <div class="group relative">
@@ -50,8 +50,9 @@ async function refreshOwnBooks() {
         <div class="w-full mt-1">
           <button
             type="button"
-            class="block w-full rounded bg-yellow-500 px-6 pb-2 pt-2.5 text-xs font-bold uppercase leading-normal text-white">
-            Tambah Ulasan
+            class="block w-full rounded bg-yellow-500 px-6 pb-2 pt-2.5 text-xs font-bold uppercase leading-normal text-white"
+            onClick="showModal(${item.pk})">
+            Update
           </button>
         </div>
       </div>
@@ -62,7 +63,76 @@ async function refreshOwnBooks() {
   $(".bookshelf-mybuddy").html(stringAdd);
 }
 
+function addPage(id) {
+  fetch(`/mybuddy/add-page-track/`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      pk: id
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  }).then(res => {
+    refreshOwnBooks();
+  }).catch(err => {
+    console.log(err);
+    alert("Gagal menambah page.");
+  })
+}
+
+function subPage(id) {
+  fetch(`/mybuddy/sub-page-track/`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      pk: id
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  }).then(res => {
+    refreshOwnBooks();
+  }).catch(err => {
+    console.log(err);
+    alert("Gagal mengurangi page.");
+  })
+}
+
+function showModal(id) {
+  $(".modal-update").removeClass("hidden")
+  fetch('/mybuddy/', {
+    method: "PUT",
+    body: JSON.stringify({
+      pk: id
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  }).then(res => console.log(res.json()))
+}
+
+function closeModal() {
+  $(".modal-update").addClass("hidden")
+  $(".page-track").val("")
+  $(".status").val("W")
+  $(".ulasan").val("")
+}
+
 $(document).ready(()=>{
+  $(".btn-close").click(() => {
+    closeModal()
+  })
+  
+  $(".btn-submit").click(() => {
+    const form = document.querySelector("#form-update")
+    const formData = new FormData(form);
+    fetch("/mybuddy/update-own-book/", {
+        method: "POST",
+        body: formData
+    }).then(res => {
+      refreshOwnBooks();
+      closeModal();
+    })
+  })
 
   $("#search-book").on("input", function() {
     const query = $(this).val();

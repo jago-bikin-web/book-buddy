@@ -19,9 +19,15 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
       <a href="{% url 'mybuddy:my_buddy'%}" class="nav relative text-sm font-semibold leading-6 text-gray-900">My Buddy</a>
+<<<<<<< HEAD
       <a href="#find-buddy" class="nav relative text-sm font-semibold leading-6 text-gray-900">Find Buddy</a>
       <a href="#reach-buddy" class="nav relative text-sm font-semibold leading-6 text-gray-900">Reach Buddy</a>
       <a href="{% url 'eventbuddy:show_eventbuddy'%}" class="nav relative text-sm font-semibold leading-6 text-gray-900">Event Buddy</a>
+=======
+      <a href="#" class="nav relative text-sm font-semibold leading-6 text-gray-900">Find Buddy</a>
+      <a href="#" class="nav relative text-sm font-semibold leading-6 text-gray-900">Reach Buddy</a>
+      <a href="{% url 'eventbuddy:show_eventbuddy' %}" class="nav relative text-sm font-semibold leading-6 text-gray-900">Event Buddy</a>
+>>>>>>> f955a5714aa9a89f47bc671a6e5145f464a5be3d
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
       {% if user %}
@@ -49,7 +55,7 @@
     <div class="fixed inset-0 z-50"></div>
     <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
       <div class="flex items-center justify-between">
-        <a href="/" class="-m-1.5 p-1.5">
+        <a href="{% url 'main:landing_page' %}" class="-m-1.5 p-1.5">
           <span class="sr-only">Books Buddy</span>
           <img class="h-8 w-auto" src="{% static 'img/logo2.png' %}" alt="books buddy logo">
         </a>
@@ -69,11 +75,21 @@
             <a href="{% url 'mybuddy:my_buddy'%}" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">My Buddy</a>
             <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Find Buddy</a>
             <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Reach Buddy</a>
+<<<<<<< HEAD
             <a href="{% url 'eventbuddy:show_eventbuddy'%}" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Event Buddy</a>
+=======
+            <a href="{% url 'eventbuddy:show_eventbuddy' %}" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Event Buddy</a>
+>>>>>>> f955a5714aa9a89f47bc671a6e5145f464a5be3d
           </div>
+          {% if user %}
           <div class="py-6">
             <a href="{% url 'main:login' %}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log in</a>
           </div>
+          {% else %}
+          <div class="py-6">
+            <a href="{% url 'main:logout' %}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log out</a>
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
