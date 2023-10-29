@@ -12,7 +12,7 @@ class UpdateForm(forms.ModelForm):
         })
     )
     # R = lagi dibaca, F = finish, W = wistlish
-    STATUS_CHOICES = [('W', 'Wistlish'), ('R', 'Read'), ('F', 'Finish')]
+    STATUS_CHOICES = [('W', 'Wishlist'), ('R', 'Read'), ('F', 'Finish')]
     status = forms.ChoiceField(
         required= True,
         choices= STATUS_CHOICES,
