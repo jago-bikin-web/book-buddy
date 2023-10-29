@@ -16,7 +16,7 @@
 {% block content %}
 
 {% include 'header.html' %}
-<div class="container">
+<div class="container" data-aos="fade-left" data-aos-duration="1000">
   <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
     <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
   </div>
@@ -50,7 +50,7 @@
         </div>
 
         <a id="contents" href="{% url 'reachbuddy:create_thread' %}">
-          <button class="btn btn-warning col-3">
+          <button class="btn btn-warning col-3" data-aos="fade-down" data-aos-duration="600">
             Post a Thread
           </button>
         </a>
@@ -62,11 +62,11 @@
         <div id="thread_cards" class="thread-cards-container">
           {% for thread in threads %}
 
-          <div class="container my-2 py-2 ">
+          <div class="container my-2 py-2" data-aos="zoom-in" data-aos-duration="500">
             <div class="row d-flex justify-content-center ">
               <div class="col-md-12 col-lg-10 col-xl-8 ">
                 <div class="card col-7 mx-auto border-warning border-3 border-radius rounded-4">
-                  <div class="card-body ">
+                  <div class="card-body">
                     <div class="d-flex flex-start align-items-center">
                       <div class="d-flex align-items-center">
                         <img class="rounded-circle shadow-1-strong me-3"

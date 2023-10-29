@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.models import User
 from reachbuddy.models import Thread
+from main.models import Profile
+from book.models import Book
 from reachbuddy.forms import ThreadForm
 from django.urls import reverse
 from django.core import serializers
@@ -19,12 +22,16 @@ def show_reachbuddy(request):
 
 def create_thread(request):
     form = ThreadForm(request.POST or None)
+    books = Book.objects.all()
 
     if form.is_valid() and request.method == "POST":
         form.save()
         return HttpResponseRedirect(reverse('reachbuddy:show_reachbuddy'))
 
-    context = {'form': form}
+    context = {
+        'form': form,
+        'books': books
+    }
     return render(request, "create_thread.html", context)
 
 def show_json(request):
@@ -37,3 +44,8 @@ def trash_thread(request, id):
 
     response = HttpResponseRedirect(reverse("reachbuddy:show_reachbuddy"))
     return response
+
+def get_books_json(request):
+    book_item = Book.objects.all()
+    return HttpResponse(serializers.serialize('json', book_item))
+
