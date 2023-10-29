@@ -1,7 +1,7 @@
-from django.forms import ModelForm
-from book.models import Book
+from django import forms
+from findbuddy.models import BookFind
 
-class RatingsForm(ModelForm):
+class BookForm(forms.ModelForm):
     class Meta:
-        model = Book
-        fields = ["average_rating"]
+        model = BookFind
+        fields = ['title', 'author']

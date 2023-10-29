@@ -1,149 +1,19 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block framework %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-{% endblock framework %}
+  <script src="https://cdn.tailwindcss.com"></script>
+{% endblock %}
+
+{% block meta %}
+<title>Books Buddy</title>
+<link rel="stylesheet" href="{% static 'css/findbuddy.css' %}" type="text/css"/>
+{% endblock %}
 
 {% block content %}
-<style>
-    .custom-card {
-        width: 90%;
-        margin: 20px auto;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-    }
 
-    .product-card {
-        width: calc(30% - 20px);
-        background-color: #e6e6e6;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 5px;
-        display: flex;
-        align-items: center;
-    }
-
-    .product-image {
-        width: 100px;
-        height: 150px;
-        margin-right: 10px;
-    }
-
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    .page-link {
-        cursor: pointer;
-        padding: 5px 10px;
-        margin: 0 5px;
-    }
-
-    .pagination-button {
-        cursor: pointer;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        margin: 0 5px;
-    }
-
-    .page-bar {
-        display: flex;
-        align-items: center;
-    }
-
-    .page-bar-text {
-        margin: 0 10px;
-    }
-
-    .search-bar {
-        margin: 10px 0;
-    }
-
-    .search-input {
-        padding: 5px;
-        width: 100%;
-    }
-
-    /* Style for filters */
-    .filter-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        margin-top: 10px;
-    }
-
-    .filter-dropdown {
-        margin-right: 10px;
-    }
-
-    /* CSS for the modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    overflow: auto;
-}
-
-.modal-content {
-    position: relative;
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 5px;
-    display: flex;
-}
-
-.modal-image {
-    max-width: 20%;
-    margin-right: 20px;
-}
-
-.modal-details {
-    flex-grow: 1;
-}
-
-.modal-details h2 {
-    margin-top: 0; /* Hapus margin atas pada judul */
-}
-
-.modal-details p {
-    margin: 5px 0;
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: #555; /* Warna ikon tombol Close */
-}
-
-.modal-flex-container {
-    display: flex;
-    align-items: flex-start;
-}
-
-.modal-image {
-    max-width: 30%;
-    margin-right: 20px;
-}
-
-</style>
+{% include 'header.html' %}
 
 <div class="search-bar">
     <input type="text" id="search-input" class="search-input" placeholder="Search books...">
@@ -167,6 +37,28 @@
 
 <div id="pagination" class="pagination-container"></div>
 
+<div class="card-container2">
+    <div class="custom-card2">
+        <table id="form_table" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="centered" style="background-color: rgb(228, 228, 44)">Title</th>
+                    <th class="centered" style="background-color: rgb(228, 228, 44)">Authors</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<button id="request-button" class="button-req">REQUEST BOOK</button>
+
+<form id="book-form">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <button id="button_add">Submit</button>
+</form>
+
+
 <div class="modal" id="productModal">
     <div class="modal-content" id="modalContent">
         <button class="close">Close</button>
@@ -183,218 +75,16 @@
                 <p><strong>Language:</strong> <span id="modalLanguage"></span></p>
                 <p><strong>Buy Link:</strong> <a href="" id="modalBuyLink" target="_blank">Buy Now</a></p>
                 <p class="modal-description" id="modalDescription"></p>
-                <form id="form" method="dialog">
-                    {% csrf_token %}
-                    {{ form.as_table }}
-                    <button type="submit" id="buttonSubmit">Submit</button>
-                </form>
             </div>
         </div>
     </div>
 </div>
 
+{% include 'footer.html' %}
 
 <script>
-    const cardsPerPage = 15;
-    let currentPage = 1;
-    let products = [];
-    let initialProducts = [];
-    
-    const searchInput = document.getElementById("search-input");
-    
-    searchInput.addEventListener("input", () => {
-        const searchTerm = searchInput.value.toLowerCase();
-        const searchResults = initialProducts.filter(product => product.fields.title.toLowerCase().startsWith(searchTerm));
-        currentPage = 1;
-        renderFilteredProducts(searchResults);
-    });
-    
-    async function getProducts() {
-        return fetch("{% url 'findbuddy:get_book_json' %}")
-            .then((res) => res.json());
-    }
-
-    function addRating() {
-        const buttonSubmit = document.getElementById("button_submit")
-        const form = new FormData(document.getElementById("form"));
-        const pk = buttonSubmit.getAttribute("value")
-        fetch("/findbuddy/add-rating/",{            
-            method: "POST",
-            body: form
-        })
-    }
-
-    function openModal(product) {
-        const modal = document.getElementById("productModal");
-        const modalImage = document.getElementById("modalImage");
-        const modalTitle = document.getElementById("modalTitle");
-        const modalAuthor = document.getElementById("modalAuthor");
-        const modalDescription = document.getElementById("modalDescription");
-        const modalPublisher = document.getElementById("modalPublisher");
-        const modalPublishedDate = document.getElementById("modalPublishedDate");
-        const modalPageCount = document.getElementById("modalPageCount");
-        const modalCategories = document.getElementById("modalCategories");
-        const modalAverageRating = document.getElementById("modalAverageRating");
-        const modalLanguage = document.getElementById("modalLanguage");
-        const modalBuyLink = document.getElementById("modalBuyLink");
-
-        const closeModalBtn = document.querySelector(".close");
-
-        modal.style.display = "block";
-        modalImage.src = product.fields.thumbnail;
-        modalImage.alt = product.fields.title;
-        modalTitle.textContent = product.fields.title;
-        modalAuthor.textContent = product.fields.authors;
-        modalDescription.textContent = product.fields.description;
-        modalPublisher.textContent = product.fields.publisher;
-        modalPublishedDate.textContent = product.fields.published_date;
-        modalPageCount.textContent = product.fields.page_count;
-        modalCategories.textContent = product.fields.categories;
-        modalAverageRating.textContent = product.fields.average_rating;
-        modalLanguage.textContent = product.fields.languange;
-        modalBuyLink.href = product.fields.buyLink;
-
-        if (product.fields.average_ratings) {
-            modalAverageRatings.textContent = product.fields.average_ratings;
-        } else {
-            modalAverageRating.textContent = "None";
-        }
-
-        closeModalBtn.addEventListener("click", () => {
-            modal.style.display = "none";
-        });
-
-        buttonSubmit.addEventListener("click", () => {
-            addRating
-            alert("wooi -1")
-        })
-    }
-
-
-    async function updateProductsByCategory(category) {
-        const selectedCategory = category;
-        if (selectedCategory) {
-            const newProducts = initialProducts.filter(product => product.fields.categories === selectedCategory);
-            currentPage = 1;
-            renderFilteredProducts(newProducts);
-        } else {
-            currentPage = 1;
-            renderFilteredProducts(initialProducts);
-        }
-    }
-    
-    function renderFilteredProducts(filteredProducts) {
-        products = filteredProducts;
-        renderCurrentPage();
-        renderPagination();
-    }
-    
-    function renderCurrentPage() {
-        const cardContainer = document.getElementById("product_cards");
-        cardContainer.innerHTML = "";
-    
-        const startIndex = (currentPage - 1) * cardsPerPage;
-        const endIndex = startIndex + cardsPerPage;
-
-        for (let i = startIndex; i < endIndex && i < products.length; i++) {
-            const item = products[i];
-            const authors = item.fields.authors.split(",");
-
-            const card = document.createElement("div");
-            card.className = "product-card";
-            card.id = `product-card-${i}`; // Tambahkan id ke kartu
-
-            card.innerHTML = `
-                <img class="product-image" src="${item.fields.small_thumbnail}" alt="Book Cover">
-                <div>
-                    <p>${item.fields.title}</p>
-                    <p><strong>Author:</strong> ${formatAuthors(authors)}</p>
-                    <p><strong>Description:</strong> ${truncateDescription(item.fields.description, 10)}</p>
-                </div>
-            `;
-            cardContainer.appendChild(card);
-            card.addEventListener("click", () => openModal(item)); // Tambahkan event listener
-        }
-    }
-    
-    function formatAuthors(authors) {
-        if (authors.length === 1) {
-            return authors[0];
-        } else {
-            return authors[0] + ", and more";
-        }
-    }
-    
-    function truncateDescription(description, wordCount) {
-        const words = description.split(" ");
-        if (words.length > wordCount) {
-            return words.slice(0, wordCount).join(" ") + " ...";
-        }
-        return description;
-    }
-    
-    function renderPagination() {
-        const paginationContainer = document.getElementById("pagination");
-        paginationContainer.innerHTML = "";
-    
-        const totalPages = Math.ceil(products.length / cardsPerPage);
-    
-        const pageBar = document.createElement("div");
-        pageBar.className = "page-bar";
-    
-        if (currentPage > 1) {
-            const prevButton = document.createElement("button");
-            prevButton.className = "pagination-button";
-            prevButton.innerText = "Previous";
-            prevButton.addEventListener("click", () => {
-                currentPage--;
-                renderCurrentPage();
-                scrollToTop();
-                renderPagination();
-            });
-            pageBar.appendChild(prevButton);
-        }
-    
-        const pageBarText = document.createElement("div");
-        pageBarText.className = "page-bar-text";
-        pageBarText.innerText = `Page ${currentPage} of ${totalPages}`;
-        pageBar.appendChild(pageBarText);
-    
-        if (currentPage < totalPages) {
-            const nextButton = document.createElement("button");
-            nextButton.className = "pagination-button";
-            nextButton.innerText = "Next";
-            nextButton.addEventListener("click", () => {
-                currentPage++;
-                renderCurrentPage();
-                scrollToTop();
-                renderPagination();
-            });
-            pageBar.appendChild(nextButton);
-        }
-    
-        paginationContainer.appendChild(pageBar);
-    }
-    
-    function scrollToTop() {
-        window.scrollTo(0, 0);
-    }
-    
-    const categoryFilter = document.getElementById("category-filter");
-    
-    categoryFilter.addEventListener("change", () => {
-        updateProductsByCategory(categoryFilter.value);
-    });
-    
-    const filterContainer = document.getElementById("filter-container");
-    
-    getProducts().then((data) => {
-        products = data;
-        initialProducts = data;
-        renderCurrentPage();
-        renderPagination();
-    });
+    AOS.init();
 </script>
-
-
-{% endblock content %}
+  
+<script src="{% static 'js/findbuddy.js' %}"></script>
+{% endblock %}
