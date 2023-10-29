@@ -1,19 +1,50 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block framework %}
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %} 
 
 {% block content %}
-<h1>Add New Product</h1>
 
-<form method="POST">
+
+<form method="POST" class="max-w-3xl mx-auto">
     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-            <td></td>
-            <td>
-                <input type="submit" value="Add Event"/>
-            </td>
-        </tr>
-    </table>
+    <div class="flex flex-col items-center mt-4 space-y-4" style="max-width: 1600px;">
+        <!-- Judul Form -->
+        <h1 class="text-2xl font-semibold text-gray-700">Add New Event</h1>
+        
+        <!-- Input Fields -->
+        <div class="w-full bg-yellow-400 p-4 rounded-lg">
+            {{ form.as_p }}
+        </div>
+
+        <!-- Daftar Produk -->
+        <div class="overflow-y-scroll bg-yellow-400 w-[1000px] h-[400px] rounded-lg">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                {% for book in books %}
+                <div class="max-w-sm border bg-white rounded-lg shadow-lg">
+                    <a href="#"><img src="{{ book.thumbnail }}" alt="" class="h-[12.5rem] w-full object-cover" /></a>
+                    <div class="p-4">
+                        <a href="#">
+                            <h5 class="font-NotoSansGeo mb-2 text-lg font-bold leading-normal">{{ book.title }}</h5>
+                        </a>
+                        <p class="mb-3 text-sm text-gray-700">{{ book.authors }}</p>
+                        <p class="mb-3 text-sm text-gray-700">
+                            {{ book.description|truncatechars:40 }}{% if book.description|length > 40 %}...{% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tombol "Add Event" -->
+        <input type="submit" value="Add Event" class="bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
+    </div>
 </form>
+
+
 
 {% endblock %}
