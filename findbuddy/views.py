@@ -14,11 +14,19 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from book.models import Book
+from findbuddy.forms import RatingsForm
 
 # Create your views here.
+def add_rating(request):
+    print(request.POST)
+    print(request.POST.get("pk"))
+    print(request.POST.get("form"))
+    return JsonResponse("Hallooo")
 
 def show_findbuddy(request):
     books = Book.objects.all()
+
+    form = RatingsForm(request.POST or None)
 
     categories = set([book.categories for book in books])
     
@@ -26,6 +34,7 @@ def show_findbuddy(request):
         'name' : 'Gamma',
         'books' : books,
         'categories': categories,
+        'form' : form,
     }
 
     return render(request, "findbuddy.html", context)
@@ -33,3 +42,5 @@ def show_findbuddy(request):
 def get_book_json(request):
     book_item = Book.objects.all()
     return HttpResponse(serializers.serialize('json', book_item))
+
+# def get_book_

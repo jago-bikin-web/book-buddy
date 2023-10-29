@@ -6,6 +6,7 @@ app_name = 'findbuddy'
 
 
 urlpatterns = [
-    path('findbuddy/', show_findbuddy, name='findbuddy'),
+    path('', show_findbuddy, name='findbuddy'),
     path('get-book/', get_book_json, name='get_book_json'),
+    path('add-rating/', add_rating, name='add_rating'),
 ]
