@@ -17,7 +17,7 @@
           <a href="{% url 'main:home'%}" class="mr-4 hover:underline md:mr-6">Home</a>
         {% endif %}
           <a href="{% url 'mybuddy:my_buddy'%}" class="mr-4 hover:underline md:mr-6">My Buddy</a>
-          <a href="#" class="mr-4 hover:underline md:mr-6">Find Buddy</a>
+          <a href="{% url 'findbuddy:findbuddy' %}" class="mr-4 hover:underline md:mr-6">Find Buddy</a>
           <a href="{% url 'reachbuddy:show_reachbuddy' %}" class="mr-4 hover:underline md:mr-6">Reach Buddy</a>
           <a href="{% url 'eventbuddy:show_eventbuddy' %}" class="hover:underline">Event Buddy</a>
       </div>
