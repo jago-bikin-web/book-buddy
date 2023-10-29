@@ -1,0 +1,40 @@
+:root {
+  --font-color: rgba(0, 0, 0, 0.9);
+  --bg-color: #fff;
+  --primary-color: rgba(0, 0, 0, 1);
+  --secondary-color: rgba(0, 0, 0, 0.5);
+  --light-bg-color: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--light-bg-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+body {
+  scroll-behavior: smooth;
+}
+
+.nav:after {
+  content: "";
+  position: absolute;
+  background-color: #FBC02D;
+  height: 3px;
+  width: 0;
+  left: 0;
+  bottom: -4px;
+  transition: 0.5s;
+}
+
+.nav:hover:after {
+  width: 100%;
+}

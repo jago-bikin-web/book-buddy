@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+<!--  Load static files -->
+{% load static %}
+
+{% block framework %}
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %} 
+
+
+{% block meta %}
+<title>Event Buddy | Books Buddy</title>
+<link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css"/>
+<link rel="stylesheet" href="{% static 'css/ebuddy.css' %}" type="text/css"/>
+
+{% endblock meta %}
+
+{% block content %}
+
+{% include 'header.html' %}
+
+<div id="updateProductModal" tabindex="-1" aria-hidden="true" class="modal-update hidden overflow-y-auto overflow-x-hidden fixed z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+    <div class="relative mx-auto mt-32 w-full max-w-2xl h-full md:h-auto">
+        <!-- Modal content -->
+        <div class="relative gradient-custom p-4 bg-black rounded-lg shadow sm:p-5">
+            <!-- Modal header -->
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-grey-900">
+                    Add New Event
+                </h3>
+                <button type="button" id= "btn-close" class="btn-close text-white bg-primary-700 hover:bg-primary-800 shadow font-medium text-sm rounded-lg ml-auto inline-flex items-center px-5 py-2.5">
+                    Close
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form id="formevent" class="max-w-3xl mx-auto">
+                {% csrf_token %}
+                <div class="flex flex-col items-center mt-4 space-y-4" style="max-width: 1600px;">
+                    
+                    <!-- Input Fields -->
+                    <div class="w-full bg-yellow-400 p-4 rounded-lg">
+                        <div>
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 text-grey-900">Name</label>
+                            {{ form.name }}
+                        </div>
+                        <div>
+                            <label for="date" class="block mb-2 text-sm font-medium text-gray-900 text-grey-900">Date</label>
+                            {{ form.date }}
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 text-grey-900" >Description</label>
+                            {{ form.description }}
+                        </div>
+                        <div>
+                            <label for="book" class="block mb-2 text-sm font-medium text-gray-900 text-grey-900">Choose Books</label>
+                            {{ form.book }}
+                        </div>
+                    </div>
+        
+                    <!-- Daftar Produk -->
+                    <div class="overflow-y-scroll bg-yellow-400 w-[1000px] h-[400px] rounded-lg">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                            {% for book in books %}
+                            <div class="max-w-sm border bg-white rounded-lg shadow-lg">
+                                <a href="#"><img src="{{ book.thumbnail }}" alt="" class="h-[12.5rem] w-full object-cover" /></a>
+                                <div class="p-4">
+                                    <a href="#">
+                                        <h5 class="font-NotoSansGeo mb-2 text-lg font-bold leading-normal">{{ book.title }}</h5>
+                                    </a>
+                                    <p class="mb-3 text-sm text-gray-700">{{ book.authors }}</p>
+                                    <p class="mb-3 text-sm text-gray-700">
+                                        {{ book.description|truncatechars:40 }}{% if book.description|length > 40 %}...{% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+        
+                    <!-- Tombol "Add Event" -->
+                    <input id="button_add" value="Add Event" class="bg-yellow-600 text-center text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2">
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+
+<div class="bg-white h-screen">
+    <div class="isolate px-6 lg:px-8">
+      <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+      </div>
+        <div class="container mx-auto my-4 py-16 sm:py-24 lg:py-28">
+          <div class="section-header">
+            <div class="section-title"><h1 class="font-BPGBannerCaps font-bold tracking-wide">Events in Books Buddy</h1></div>
+            <hr class="mb-4 h-px border-0 bg-gray-400 dark:bg-gray-700" />
+          </div>
+          <div id="event_cards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        </div>
+        <div class="mt-4">
+          <a id ="addevent" class="rounded-md bg-yellow-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Event</a>
+        </div>
+      </div>
+      </div>
+    <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
+      <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+    </div>
+  </div>
+</div> 
+
+{% include 'footer.html' %}
+
+<script src="{% static 'js/ebuddy.js' %}"></script>
+
+{% endblock content %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block framework %}
+  <script src="https://cdn.tailwindcss.com"></script>
+{% endblock %}
+
+{% block meta %}
+<title>Books Buddy</title>
+<link rel="stylesheet" href="{% static 'css/findbuddy.css' %}" type="text/css"/>
+{% endblock %}
+
+{% block content %}
+
+{% include 'header.html' %}
+
+<div class="search-bar">
+    <input type="text" id="search-input" class="search-input" placeholder="Search books...">
+</div>
+
+<div class="filter-container" id="filter-container">
+
+    <div class="filter-dropdown">
+        <label for="category-filter">Filter by Category:</label>
+        <select id="category-filter">
+            <option value="">All Categories</option>
+            <!-- Loop through categories and add options dynamically -->
+            {% for category in categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div id="product_cards" class="custom-card"></div>
+
+<div id="pagination" class="pagination-container"></div>
+
+<div class="card-container2">
+    <div class="custom-card2">
+        <table id="form_table" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="centered" style="background-color: rgb(228, 228, 44)">Title</th>
+                    <th class="centered" style="background-color: rgb(228, 228, 44)">Authors</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<button id="request-button" class="button-req">REQUEST BOOK</button>
+
+<form id="book-form">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <button id="button_add">Submit</button>
+</form>
+
+
+<div class="modal" id="productModal">
+    <div class="modal-content" id="modalContent">
+        <button class="close">Close</button>
+        <div class="modal-flex-container">
+            <img class="modal-image" id="modalImage" src="" alt="Large Book Cover">
+            <div class="modal-details">
+                <h2 id="modalTitle"></h2>
+                <p><strong>Author:</strong> <span id="modalAuthor"></span></p>
+                <p><strong>Publisher:</strong> <span id="modalPublisher"></span></p>
+                <p><strong>Published Date:</strong> <span id="modalPublishedDate"></span></p>
+                <p><strong>Page Count:</strong> <span id="modalPageCount"></span></p>
+                <p><strong>Categories:</strong> <span id="modalCategories"></span></p>
+                <p><strong>Ratings:</strong> <span id="modalAverageRating"></span></p>
+                <p><strong>Language:</strong> <span id="modalLanguage"></span></p>
+                <p><strong>Buy Link:</strong> <a href="" id="modalBuyLink" target="_blank">Buy Now</a></p>
+                <p class="modal-description" id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+
+<script>
+    AOS.init();
+</script>
+  
+<script src="{% static 'js/findbuddy.js' %}"></script>
+{% endblock %}

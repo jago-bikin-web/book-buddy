@@ -1,0 +1,136 @@
+{% extends 'base.html' %} 
+
+<!--  Load static files -->
+{% load static %}
+
+{% block meta %}
+<title>Reach Buddy | Books Buddy</title>
+{% endblock %}
+
+{% block framework %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="{% static 'css/create_thread.css' %}" type="text/css"/>
+{% endblock %}
+
+{% block content %}
+
+<!-- BENTUKAN CARD UTAMA
+<div class="card border-warning border-3 border-radius rounded-4 h-100 col-11 mx-auto">
+  <div class="card-body row">
+    <div class="col-2">
+      <img class="rounded shadow-1-strong" src="${book.fields.thumbnail}" alt="avatar" width="65" height="65" />
+    </div>
+    <div class="col-10">
+      <h2 class="font-bold">${nomorBuku}. ${book.fields.title}</h2>
+      <p>Author: </span> ${slicedAuthors}</p>
+      <p>Published date: </span>${book.fields.published_date}</p>
+      <p>Pages: </span>${book.fields.page_count}</p>
+    </div>
+  </div>
+</div> -->
+
+{% include 'header.html' %}
+
+<div class="container">
+  <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
+    <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+  </div>
+    <div class="container my-5 py-5 text-dark">
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+            <div class="card border-warning border-3 border-radius rounded-4" data-aos="fade-up" data-aos-duration="800">
+                <div class="card-body p-4 mb-0">
+                  <div class="d-flex flex-column justify-content-center w-100">
+                    <div id="chosen_book" class="mx-auto">
+                        <h2 class="text-center mt-auto p-2 text-3xl font-bold">Choose the Book</h2>
+                    </div>
+                    <!-- <button type="button" class="btn btn-warning col-3 mb-auto p-2 col-5 mx-auto" data-bs-toggle="modal" data-bs-target="">Choose</button> -->
+                    <!-- <a data-bs-toggle="modal" data-bs-target="#showBooksModal" class="btn btn-warning col-3 mb-auto p-2 col-5 mx-auto">Choose</a> -->
+                    <button id="tombol_pilih_buku" type="button" data-bs-toggle="modal" data-bs-target="#showBooksModal" class="text-white bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-lg shadow-yellow-500/50 dark:shadow-lg dark:shadow-yellow-800/80 font-medium rounded-lg text-sm mb-auto p-2.5 col-5 mx-auto">
+                      Choose</button>
+
+                  </div>
+                </div>
+              <br>
+
+            <div class="card-footer p-4">
+              <div class="d-flex flex-start w-100">
+                <div>
+                    <img class="rounded-circle shadow-1-strong me-3"
+                    src="{{ profile_picture }}" alt="avatar" width="65"
+                    height="65" />
+                </div>
+                <div class="w-100">
+                  <h5>Add a Thread</h5>
+                  <form id="form" method="POST">
+                    {% csrf_token %}
+                        <div class="form-outline">
+                            <textarea name="review" class="form-control" required id="id_review" rows="4" placeholder="What is your view?"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'reachbuddy:show_reachbuddy' %}" class="btn btn-danger">Cancel</a>
+                            <!-- <button id="button_post" type="submit" class="flex items-center text-white bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-lg shadow-yellow-500/50 dark:shadow-lg dark:shadow-yellow-800/80 rounded-lg text-sm px-4 py-2">Post
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                              </svg>
+                            </button> -->
+                            <button id="button_post" class="flex items-center text-white bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-lg shadow-yellow-500/50 dark:shadow-lg dark:shadow-yellow-800/80 rounded-lg text-sm px-4 py-2">Post
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                              </svg>
+                            </button>                            
+
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+      <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+    </div>
+  </div>
+
+{% include 'footer.html' %}
+
+<!-- <div class="modal-dialog modal-dialog-scrollable" id="showBooksModal"></div> -->
+
+<div class="modal modal-xl modal-dialog-scrollable" tabindex="-1" id="showBooksModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-bold text-center text-2xl">Choose the desired book</h5>
+        <button onclick="removeSelected()" type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none transition" data-bs-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body px-auto">
+        <div class="search-bar">
+          <input type="text" id="search-input" class="search-input mb-2 border border-warning border-3 rounded-md" placeholder="Search books...">
+        </div>
+        <br>
+        <div id="book_cards" class="row px-auto">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button onclick="removeSelected()" type="button" data-bs-dismiss="modal" class="bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-200 text-gray-800 font-medium rounded-lg text-sm px-4 py-2.5 mr-2">Close</button>
+        <button onclick="savedBook()" id="save_book" type="button" data-bs-dismiss="modal" class="bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 text-white font-medium rounded-lg text-sm px-4 py-2.5">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  AOS.init();
+
+</script>
+
+<script src="{% static 'js/create_thread.js' %}"></script>
+
+{% endblock %}
