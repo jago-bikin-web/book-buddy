@@ -13,7 +13,7 @@ async function refreshOwnBooks() {
     }  
 
     stringAdd += `
-    <article class="flex max-w-xl flex-col max-w-md shadow bg-white">
+    <article class="flex max-w-xl flex-col max-w-md shadow bg-white" data-aos="fade-up" data-aos-duration="1000">
       <div class="h-48 w-full flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" style="background-image: url(${item.thumbnail});"></div>
       <div class="flex max-w-xl flex-col items-start justify-between p-3">
         <div class="flex items-center text-xs justify-between w-full">

@@ -35,6 +35,9 @@ def update_own_book(request):
                 status = 'F'
             elif page_track <= 0:
                 page_track = 0
+
+            if ulasan == "":
+                ulasan = buku.ulasan
             
             buku.page_track = page_track
             buku.status = status
@@ -78,6 +81,7 @@ def show_my_buddy(request):
     return render(request, "mybuddy.html", context)
 
 @csrf_exempt
+@login_required(login_url='main:login')
 def add_buddy(request):
 
     user = Profile.objects.get(user=request.user)
