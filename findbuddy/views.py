@@ -16,13 +16,37 @@ from django.views.decorators.csrf import csrf_exempt
 from book.models import Book
 from findbuddy.forms import RatingsForm
 
-# Create your views here.
+@csrf_exempt  # Tambahkan ini jika Anda ingin menonaktifkan proteksi CSRF
 def add_rating(request):
-    print(request.POST)
-    print(request.POST.get("pk"))
-    print(request.POST.get("form"))
-    return JsonResponse("Hallooo")
+    if request.method == 'POST':
+        # Dapatkan data yang dikirimkan melalui permintaan POST
+        data = request.POST
 
+        # Dapatkan nilai rating dan ID buku
+        rating = data.get('rating')
+        book_id = data.get('productId')
+
+        if rating is not None and book_id is not None:
+            # Dapatkan objek buku
+            book = get_object_or_404(Book, pk=book_id)
+
+            # Perbarui nilai average_ratings di model Book
+            current_ratings = book.average_rating
+            current_ratings_count = book.ratings_count
+
+            new_ratings_count = current_ratings_count + 1
+            new_average_ratings = (current_ratings * current_ratings_count + int(rating)) / new_ratings_count
+
+            # Perbarui nilai average_ratings di model Book
+            book.average_rating = new_average_ratings
+            book.ratings_count = new_ratings_count
+            book.save()
+
+            # Kembalikan respons dengan nilai baru average_ratings
+            return JsonResponse({'newAverageRating': new_average_ratings})
+
+    # Kembalikan respons dengan kesalahan jika ada kesalahan
+    return JsonResponse({'error': 'Failed to add rating'}, status=400)
 def show_findbuddy(request):
     books = Book.objects.all()
 
@@ -43,4 +67,3 @@ def get_book_json(request):
     book_item = Book.objects.all()
     return HttpResponse(serializers.serialize('json', book_item))
 
-# def get_book_
