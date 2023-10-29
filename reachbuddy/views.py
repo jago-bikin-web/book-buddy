@@ -67,11 +67,11 @@ def get_book_json_id(request, id):
 #         return HttpResponse(status=404)
 
 @csrf_exempt
-def create_thread_ajax(request, book_id):
+def create_thread_ajax(request, id):
     form = ThreadForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        chosen_book = Book.objects.get(pk=book_id)
+        chosen_book = Book.objects.get(pk=id)
         new_thread = form.save(commit=False)
         new_thread.book = chosen_book
         #user janlup

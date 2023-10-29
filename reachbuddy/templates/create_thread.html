@@ -259,7 +259,7 @@
   refreshCards();
 
   function addThread() {
-    fetch(`/reachbuddy/create_thread_ajax/${chosenBookId}`, {
+    fetch(`/reachbuddy/create_thread_ajax/${chosenBookId}/`, {
         method: "POST",
         body: new FormData(document.querySelector('#form'))
     })
