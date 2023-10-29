@@ -17,11 +17,17 @@ from book.models import Book
 from findbuddy.forms import RatingsForm
 
 # Create your views here.
+@csrf_exempt
 def add_rating(request):
+    form = RatingsForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+
     print(request.POST)
     print(request.POST.get("pk"))
     print(request.POST.get("form"))
-    return JsonResponse("Hallooo")
+
 
 def show_findbuddy(request):
     books = Book.objects.all()

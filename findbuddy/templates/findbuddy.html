@@ -179,11 +179,11 @@
                 <p><strong>Published Date:</strong> <span id="modalPublishedDate"></span></p>
                 <p><strong>Page Count:</strong> <span id="modalPageCount"></span></p>
                 <p><strong>Categories:</strong> <span id="modalCategories"></span></p>
-                <p><strong>Ratings:</strong> <span id="modalAverageRatings"></span></p>
+                <p><strong>Ratings:</strong> <span id="modalAverageRating"></span></p>
                 <p><strong>Language:</strong> <span id="modalLanguage"></span></p>
                 <p><strong>Buy Link:</strong> <a href="" id="modalBuyLink" target="_blank">Buy Now</a></p>
                 <p class="modal-description" id="modalDescription"></p>
-                <form id="form" method="dialog">
+                <form id="form" method="POST">
                     {% csrf_token %}
                     {{ form.as_table }}
                     <button type="submit" id="buttonSubmit">Submit</button>
@@ -215,12 +215,15 @@
     }
 
     function addRating() {
-        const buttonSubmit = document.getElementById("button_submit")
+        const buttonSubmit = document.getElementById("buttonSubmit");
         const form = new FormData(document.getElementById("form"));
-        const pk = buttonSubmit.getAttribute("value")
+        const pk = buttonSubmit.getAttribute("value");
         fetch("/findbuddy/add-rating/",{            
             method: "POST",
-            body: form
+            body: {
+                "form" : form, 
+                "pk" : pk,
+            }
         })
     }
 
@@ -234,7 +237,7 @@
         const modalPublishedDate = document.getElementById("modalPublishedDate");
         const modalPageCount = document.getElementById("modalPageCount");
         const modalCategories = document.getElementById("modalCategories");
-        const modalAverageRatings = document.getElementById("modalAverageRatings");
+        const modalAverageRating = document.getElementById("modalAverageRating");
         const modalLanguage = document.getElementById("modalLanguage");
         const modalBuyLink = document.getElementById("modalBuyLink");
         const buttonSubmit = document.getElementById("buttonSubmit");
@@ -251,15 +254,15 @@
         modalPublishedDate.textContent = product.fields.published_date;
         modalPageCount.textContent = product.fields.page_count;
         modalCategories.textContent = product.fields.categories;
-        modalAverageRatings.textContent = product.fields.average_ratings;
+        modalAverageRating.textContent = product.fields.average_rating;
         modalLanguage.textContent = product.fields.languange;
         modalBuyLink.href = product.fields.buyLink;
         buttonSubmit.setAttribute("value", product.pk);
 
-        if (product.fields.average_ratings) {
-            modalAverageRatings.textContent = product.fields.average_ratings;
+        if (product.fields.average_rating) {
+            modalAverageRating.textContent = product.fields.average_rating;
         } else {
-            modalAverageRatings.textContent = "None";
+            modalAverageRating.textContent = "None";
         }
 
         closeModalBtn.addEventListener("click", () => {
@@ -267,8 +270,7 @@
         });
 
         buttonSubmit.addEventListener("click", () => {
-            addRating
-            alert("wooi -1")
+            addRating();
         })
     }
 
