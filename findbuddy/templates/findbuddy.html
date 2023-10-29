@@ -183,10 +183,11 @@
                 <p><strong>Language:</strong> <span id="modalLanguage"></span></p>
                 <p><strong>Buy Link:</strong> <a href="" id="modalBuyLink" target="_blank">Buy Now</a></p>
                 <p class="modal-description" id="modalDescription"></p>
-                <p><strong>Ratings:</strong> <span id="modalAverageRatings"></span></p>
-                <p>Rate this book:</p>
-                <input type="number" id="ratingInput" min="1" max="5">
-                <button id="submitRatingButton">Submit Rating</button>
+                <form id="form" method="dialog">
+                    {% csrf_token %}
+                    {{ form.as_table }}
+                    <button type="submit" id="buttonSubmit">Submit</button>
+                </form>
             </div>
         </div>
     </div>
@@ -211,6 +212,16 @@
     async function getProducts() {
         return fetch("{% url 'findbuddy:get_book_json' %}")
             .then((res) => res.json());
+    }
+
+    function addRating() {
+        const buttonSubmit = document.getElementById("button_submit")
+        const form = new FormData(document.getElementById("form"));
+        const pk = buttonSubmit.getAttribute("value")
+        fetch("/findbuddy/add-rating/",{            
+            method: "POST",
+            body: form
+        })
     }
 
     function openModal(product) {
@@ -244,7 +255,7 @@
         modalBuyLink.href = product.fields.buyLink;
 
         if (product.fields.average_ratings) {
-            modalAverageRating.textContent = product.fields.average_ratings;
+            modalAverageRatings.textContent = product.fields.average_ratings;
         } else {
             modalAverageRating.textContent = "None";
         }
@@ -253,39 +264,10 @@
             modal.style.display = "none";
         });
 
-        const ratingInput = document.getElementById("ratingInput");
-        const submitRatingButton = document.getElementById("submitRatingButton");
-
-        submitRatingButton.addEventListener("click", () => {
-            // Dapatkan nilai rating dari input
-            const rating = ratingInput.value;
-            const productId = product.pk; // Ganti ini dengan cara Anda mendapatkan ID produk yang sesuai
-
-            // Kirim data rating ke server
-            fetch("/findbuddy/add-rating/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ rating, productId }),
-            })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("Failed to post rating.");
-                }
-            })
-            .then((data) => {
-                // Handle response from the server, misalnya, perbarui tampilan rating pada modal
-                modalAverageRating.textContent = data.newAverageRating; // Ganti ini sesuai dengan data yang dikembalikan dari server
-                ratingInput.value = ""; // Reset input rating
-                // Tutup modal jika perlu
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-        });
+        buttonSubmit.addEventListener("click", () => {
+            addRating
+            alert("wooi -1")
+        })
     }
 
 
