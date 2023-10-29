@@ -23,12 +23,6 @@ def show_json(request):
     data = BookFind.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-@csrf_exempt
-def add_rating(request):
-    print(request.POST)
-    print(request.POST.get("pk"))
-    print(request.POST.get("form"))
-    return JsonResponse("Hallooo")
 
 @login_required(login_url='main:login')
 def show_findbuddy(request):
