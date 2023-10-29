@@ -1,27 +1,122 @@
 {% extends 'base.html' %}
 
 <!--  Load static files -->
-{% load static %}
+{% load static %} 
+
+{% block framework %}
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %} 
 
 {% block meta %}
-<title>MyBuddy | Books Buddy</title>
-<link rel="stylesheet" href="{% static 'css/mybuddy.css' %}" type="text/css"/>
-{% endblock %}
+<title>My Buddy | Books Buddy</title>
+<link rel="stylesheet" href="{% static 'css/mybuddy.css' %}" type="text/css" />
+{% endblock %} 
 
-{% block content %}
+{% block content %} 
 
 {% include 'header.html' %}
 
+<div class="bg-white h-max">
+  <div class="isolate px-6 lg:px-8">
+    <div
+      class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+      aria-hidden="true"
+    >
+      <div
+        class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#964B00] to-[#FFFF00] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+        style="
+          clip-path: polygon(
+            74.1% 44.1%,
+            100% 61.6%,
+            97.5% 26.9%,
+            85.5% 0.1%,
+            80.7% 2%,
+            72.5% 32.5%,
+            60.2% 62.4%,
+            52.4% 68.1%,
+            47.5% 58.3%,
+            45.2% 34.5%,
+            27.5% 76.7%,
+            0.1% 64.9%,
+            17.9% 100%,
+            27.6% 76.8%,
+            76.1% 97.7%,
+            74.1% 44.1%
+          );
+        "
+      ></div>
+    </div>
+    <div class="pt-24 pb-10 sm:pb-10 sm:pt-32">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:mx-0">
+          <h2
+            class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+          >
+            Your Collection
+          </h2>
+          <!-- <p class="mt-2 text-lg leading-8 text-gray-600"></p> -->
+        </div>
+        <div
+          class="bookshelf-mybuddy w-full mt-4 grid grid-cols-1 auto-rows-max gap-x-8 gap-y-16 border-t border-gray-600 pt-4 sm:mt-8 sm:pt-8 lg:mx-0 lg:max-w-none lg:grid-cols-3 md:grid-cols-2 justify-items-center"
+        >
 
+          <!-- More posts... -->
+        </div>
+      </div>
+    </div>
+    <div class="w-full flex items-center justify-center">
+      <a href="{% url 'mybuddy:add_buddy' %}" class="bg-yellow-500 hover:bg-yellow-400 text-white font-semibold py-2 px-4 border border-gray-400 rounded shadow w-1/4 text-center">
+          Add Book
+      </a>
+    </div>
+  </div>
+</div>
 
-
-
-
-
-
-
-
+  <!-- Main modal -->
+  <div id="updateProductModal" tabindex="-1" aria-hidden="true" class="modal-update hidden overflow-y-auto overflow-x-hidden fixed z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+    <div class="relative mx-auto mt-32 w-full max-w-2xl h-full md:h-auto">
+        <!-- Modal content -->
+        <div class="relative gradient-custom p-4 bg-black rounded-lg shadow sm:p-5">
+            <!-- Modal header -->
+            <div class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-grey-900">
+                    Update Book
+                </h3>
+                <button type="button" class="btn-close text-white bg-primary-700 hover:bg-primary-800 shadow font-medium text-sm rounded-lg ml-auto inline-flex items-center px-5 py-2.5">
+                    Close
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form id="form-update" method="dialog">
+                <div class="grid gap-4 mb-4 sm:grid-cols-2">
+                    <div>
+                        <label for="id_page_track" class="block mb-2 text-sm font-medium text-gray-900 text-grey-900">Page</label>
+                        {{ form.page_track }}
+                    </div>
+                    <div>
+                        <label for="id_status" class="block mb-2 text-sm font-medium text-gray-900 text-grey-900">Status</label>
+                        {{ form.status }}
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="id_ulasan" class="block mb-2 text-sm font-medium text-gray-900 text-grey-900">Description</label>
+                        {{ form.ulasan }}
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4 justify-end">
+                    <button class="text-white btn-submit shadow bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        Update Book
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
 
 {% include 'footer.html' %}
 
+<script>
+  AOS.init();
+</script>
+
+<script src="{% static 'js/mybuddy.js' %}"></script>
 {% endblock %}

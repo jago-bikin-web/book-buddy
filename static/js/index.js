@@ -10,7 +10,9 @@ $(document).ready(() => {
   $(".profile-picture").hover(() => {
     $(".profile-box").removeClass("hidden");
   } , () => {
-    $(".profile-box").addClass("hidden");
+    setTimeout(() => {
+      $(".profile-box").addClass("hidden");
+    }, 3200)
   })
   
   $(".profile-picture").click(() => {
