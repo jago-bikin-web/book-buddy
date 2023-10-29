@@ -16,39 +16,38 @@ def show_eventbuddy(request):
     events = Event.objects.all()
     user = Profile.objects.get(user=request.user)
     profile_picture = user.profile_picture
+    form = EventForm(request.POST or None)
+    books = Book.objects.all()
     context = {
         'user': user.full_name,
         'profile_picture': profile_picture,
         'events' : events,
+        'form': form,
+        'books': books,
     }
     return render(request, "ebuddy.html", context)
 
 @login_required(login_url='main:login')
 def create_event(request):
     form = EventForm(request.POST or None)
-    books = Book.objects.all()
     user = Profile.objects.get(user=request.user)
-    if user.is_member():
-        if form.is_valid() and request.method == "POST":
-            event = form.save(commit=False)
-            event.user = request.user
-            selected_book_id = request.POST.get('book')  # Pastikan 'book' sesuai dengan nama field pada formulir
-            event.book = Book.objects.get(pk=selected_book_id)
-            event.save()
-            return HttpResponseRedirect(reverse('eventbuddy:show_eventbuddy'))
+    if request.method == "POST":
+        if user.is_member():
+            if form.is_valid():
+                event = form.save(commit=False)
+                event.user = request.user
+                event.save()
+                return HttpResponse(b"CREATED", status=201)
 
-        context = {
-            'form': form,
-            'books': books,
-            }
-        return render(request, "create_event.html", context)
-    else:
-        return HttpResponseRedirect(reverse('eventbuddy:show_eventbuddy'))
+        else:
+            return HttpResponseNotFound()
 
+@login_required(login_url='main:login')
 def get_event_json(request):
     events = Event.objects.all()
     return HttpResponse(serializers.serialize('json', events))
 
+@login_required(login_url='main:login')
 def get_book_json(request, id):
     book = Book.objects.get(pk = id)
     return HttpResponse(serializers.serialize('json', [book]))
@@ -108,20 +107,22 @@ def show_attendees(request, id):
     else:
         return HttpResponseRedirect(reverse('eventbuddy:show_eventbuddy'))
     
-...
+
 @csrf_exempt
-def add_event_ajax(request, id):
+def add_event_ajax(request):
     if request.method == 'POST':
-        name = request.POST.get("name")
-        date = request.POST.get("date")
-        description = request.POST.get("description")
-        user = request.user
-        books = Book.objects.get(pk=request.POST.get("idBooks"))
+        form = EventForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            date = form.cleaned_data["date"]
+            description = form.cleaned_data["description"]
+            user = request.user
+            book = form.cleaned_data["book"]
 
-        new_product = Event(book=books,user=user, name=name, date=date, description=description)
-        new_product.save()
+            new_event = Event(book=book, user=user, name=name, date=date, description=description)
+            new_event.save()
 
-        return HttpResponse(b"CREATED", status=201)
+            return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
 # Create your views here.
