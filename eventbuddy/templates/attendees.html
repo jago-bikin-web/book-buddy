@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block framework %}
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %} 
+
+{% block content %}
+    {% csrf_token %}
+    <div class="flex flex-col items-center mt-4 space-y-4" style="max-width: 1600px;">
+        
+        <h1 class="text-2xl font-semibold text-gray-700">Attendees: {{count}}</h1>
+
+        <table class="bg-yellow-400 rounded-lg shadow-lg p-4 mx-auto" style="border: 1px solid #000;">
+            <tr>
+                <th class="text-white">No</th>
+                <th class="text-white">Full Name</th>
+            </tr>
+        
+            {% for i in participants %}
+                <tr>
+                    <td class="text-gray-700 dark:text-gray-400">{{ forloop.counter }}</td>
+                    <td class="text-gray-700 dark:text-gray-400">{{ i.full_name }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

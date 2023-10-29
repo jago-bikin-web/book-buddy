@@ -21,7 +21,7 @@
       <a href="{% url 'mybuddy:my_buddy'%}" class="nav relative text-sm font-semibold leading-6 text-gray-900">My Buddy</a>
       <a href="#find-buddy" class="nav relative text-sm font-semibold leading-6 text-gray-900">Find Buddy</a>
       <a href="#reach-buddy" class="nav relative text-sm font-semibold leading-6 text-gray-900">Reach Buddy</a>
-      <a href="#event-buddy" class="nav relative text-sm font-semibold leading-6 text-gray-900">Event Buddy</a>
+      <a href="{% url 'eventbuddy:show_eventbuddy'%}" class="nav relative text-sm font-semibold leading-6 text-gray-900">Event Buddy</a>
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
       {% if user %}
@@ -69,7 +69,7 @@
             <a href="{% url 'mybuddy:my_buddy'%}" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">My Buddy</a>
             <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Find Buddy</a>
             <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Reach Buddy</a>
-            <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Event Buddy</a>
+            <a href="{% url 'eventbuddy:show_eventbuddy'%}" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Event Buddy</a>
           </div>
           <div class="py-6">
             <a href="{% url 'main:login' %}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log in</a>
