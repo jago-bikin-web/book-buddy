@@ -6,7 +6,7 @@ from book.models import Book
 # Create your models here.
 
 class Thread(models.Model):
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     review = models.TextField()
