@@ -10,6 +10,5 @@ urlpatterns = [
     path('get-request/', get_request_json, name='get_request_json'),
     path('add-request-ajax/', add_request_ajax, name='add_request_ajax'),
     path('json/', show_json, name='show_json'), 
-
 ]
 
