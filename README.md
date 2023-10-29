@@ -6,11 +6,13 @@
   3. **Gamma Farrel - 2206025035**
   4. **Daffa Mohamad Fathoni - 2206824161**
 
+
 ## Books Buddy (BB) :books:
 
 **Books Buddy** merupakan sebuah aplikasi yang dirancang untuk mendukung gerakan Indonesia membaca dengan menyediakan fitur yang dapat memudahkan pengguna untuk mencari, mengelola dan berbagi informasi mengenai buku sesama pengguna aplikasi. Books Buddy juga memfasilitasi pengguna dengan memberi informasi mengenai kegiatan-kegiatan yang ingin diadakan untuk dipublikasikan di dalam aplikasi sehingga pengguna dapat menemukan kegiatan yang menarik sesuai dengan minatnya.
 
 Pada awal **Landing Page**, pengguna akan diarahkan untuk Sign Up akun baru. Saat proses pembuatan akun tersebut, pengguna akan diminta untuk memilih Role untuk akun tersebut. Perincian masing-masing Role adalah sebagai berikut:
+
 
 ## Role :point_up:
 
@@ -41,17 +43,20 @@ Pada modul “MyBuddy” pengguna dengan mudah melacak dan mengelola koleksi buk
 #### Reguler User dan Member User 
 Pengguna yang telah masuk ke dalam aplikasi dapat menyimpan koleksi bukunya secara pribadi untuk dibaca pada lain kesempatan.
 
+
 ### 2. FindBuddy :mag_right: (Jelajahi Dunia Buku):
 Dengan menggunakan API, "FindBuddy" akan menampilkan buku buku yang terdapat pada API yang digunakan sehingga memungkinkan pengguna menjelajahi banyak buku dengan mudah. Pengguna dapat mencari buku berdasarkan berbagai kriteria seperti judul, penulis, atau genre. Informasi seperti deskripsi buku dan sampulnya akan membantu pengguna memilih buku yang tepat dan dapat menambahkan kedalam modul “MyBuddy”.
 
 #### Reguler User dan Member User
 Pengguna yang telah masuk ke dalam aplikasi dapat mencari buku sesuai dengan minat pengguna.
 
+
 ### 3. ReachBuddy :incoming_envelope: (Berkomunikasi dalam Komunitas Pembaca): 
 Pada modul “ReachBuddy", pengguna dapat mengeksplorasi dan bertemu dengan komunitas pembaca yang ada. Setiap pengguna akan bertukar wawasan terkait bukunya yang ingin dibahas. Pada postingan tersebut akan ditampilkan detail buku yang diulas, dan pengguna yang melihat postingan tersebut dapat melihat buku tersebut sehingga memunculkan informasi buku tersebut.
 
 #### Member User
 Pengguna yang menjadi bagian dari komunitas dapat mengakses dan membuat postingan berisi ulasan, komentar, ataupun kritik terhadap buku yang dipilih pada modul “ReachBuddy” ini.
+
 
 ### 4. EventBuddy :date: (Jadwalkan dan Daftar Acara Buku):
 Dengan “EventBuddy”, pengguna berkesempatan mengikuti kegiatan dengan tema literasi dan buku yang mengagumkan. Pengguna dapat mencari acara buku menarik di berbagai tempat dan mendaftar untuk menghadirinya. Informasi lengkap tentang deskripsi acara, tanggal, lokasi, tema, dan buku yang akan dibahas atau ditampilkan akan membuat pengguna selalu siap untuk acara berikutnya.
@@ -73,5 +78,4 @@ Aplikasi ini dirancang untuk memberdayakan pembaca untuk lebih mendalam dalam ek
 Sumber Data Set Buku: **Google Books API**
 
 Adapun **Flow Chart** untuk aplikasi ini sebagai berikut:
-
 ![flowchart](./static/img/flowchart.jpg)
