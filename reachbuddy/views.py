@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from reachbuddy.models import Thread
 from main.models import Profile
@@ -20,22 +20,26 @@ def show_reachbuddy(request):
 
     return render(request, "reachbuddy.html", context)
 
-def create_thread(request):
-    form = ThreadForm(request.POST or None)
-    books = Book.objects.all()
+# def create_thread(request):
+#     form = ThreadForm(request.POST or None)
+#     books = Book.objects.all()
 
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return HttpResponseRedirect(reverse('reachbuddy:show_reachbuddy'))
+#     if form.is_valid() and request.method == "POST":
+#         form.save()
+#         return HttpResponseRedirect(reverse('reachbuddy:show_reachbuddy'))
 
-    context = {
-        'form': form,
-        'books': books
-    }
-    return render(request, "create_thread.html", context)
+#     context = {
+#         'form': form,
+#         'books': books
+#     }
+#     return render(request, "create_thread.html", context)
 
 def show_json(request):
     data = Thread.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+def show_json_book(request):
+    data = Book.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 def trash_thread(request, id):
@@ -48,4 +52,32 @@ def trash_thread(request, id):
 def get_books_json(request):
     book_item = Book.objects.all()
     return HttpResponse(serializers.serialize('json', book_item))
+
+def get_book_json_id(request, id):
+    chosen_book = Book.objects.get(pk=id)
+    return HttpResponse(serializers.serialize('json', [chosen_book]))
+
+# def get_book_json_by_id(request, book_id):
+#     try:
+#         chosen_book = Book.objects.get(book_id=book_id)
+#         # If you expect multiple books with the same book_id, use filter() instead of get()
+#         # chosen_books = Book.objects.filter(book_id=book_id)
+#         return HttpResponse(serializers.serialize('json', [chosen_book]))
+#     except Book.DoesNotExist:
+#         return HttpResponse(status=404)
+
+@csrf_exempt
+def create_thread_ajax(request, book_id):
+    form = ThreadForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        chosen_book = Book.objects.get(pk=book_id)
+        new_thread = form.save(commit=False)
+        new_thread.book = chosen_book
+        #user janlup
+        new_thread.save()
+
+        return HttpResponse(b"CREATED", status=201)
+    
+    return HttpResponseNotFound()
 

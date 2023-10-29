@@ -63,14 +63,14 @@
                 </div>
                 <div class="w-100">
                   <h5>Add a Thread</h5>
-                  <form method="POST">
+                  <form id="form" method="POST">
                     {% csrf_token %}
                         <div class="form-outline">
                             <textarea name="review" class="form-control" required id="id_review" rows="4" placeholder="What is your view?"></textarea>
                         </div>
                         <div class="d-flex justify-content-between mt-3">
                             <a href="{% url 'reachbuddy:show_reachbuddy' %}" class="btn btn-danger">Cancel</a>
-                            <button type="submit" class="flex items-center text-white bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-lg shadow-yellow-500/50 dark:shadow-lg dark:shadow-yellow-800/80 rounded-lg text-sm px-4 py-2">Post
+                            <button id="button_post" type="submit" class="flex items-center text-white bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-800 shadow-lg shadow-yellow-500/50 dark:shadow-lg dark:shadow-yellow-800/80 rounded-lg text-sm px-4 py-2">Post
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                               </svg>
@@ -121,6 +121,7 @@
   AOS.init();
 
   let chosenBook = null; // Variable to store the chosen book
+  let chosenBookId = null;
 
   async function getBooks() {
     return fetch("{% url 'reachbuddy:get_books_json' %}").then((res) => res.json());
@@ -151,7 +152,7 @@
 
       bookCard.innerHTML = `
         <div class="flex flex-col rounded-lg md:flex-row border-3 border-yellow-500 p-2 h-100 kartu" 
-          data-title="${book.fields.title}" onclick="chooseBook(this)" style="cursor: pointer;">
+          data-title="${book.fields.title}" data-id="${book.pk}" onclick="chooseBook(this)" style="cursor: pointer;">
             <img class="w-16 h-24 object-cover rounded-lg md:h-32 md:w-32" src="${book.fields.thumbnail}" alt="${book.fields.title}" />
             <div class="flex flex-col p-2">
                 <h5 class="mb-1 text-lg font-medium text-black">
@@ -184,12 +185,17 @@
     });
   }
 
+  function getBooksById(id) {
+    return fetch(`/reachbuddy/get_book_json_id/${id}/`).then((res) => res.json());
+  }
+
   function chooseBook(card) {
     removeSelected();
 
     // Update the chosen book and modal title
 
     chosenBook = card.getAttribute("data-title");
+    chosenBookId = card.getAttribute("data-id");
     const modalTitle = document.querySelector(".modal-title");
     modalTitle.textContent = `The chosen book is ${chosenBook}`;
 
@@ -197,15 +203,13 @@
     card.classList.add('bg-yellow-500');
   }
 
-  function savedBook(){
+  async function savedBook(){
     // diclick sama id="save_book"
     // mengisi content id="chosen_book" dengan identitas buku yang dipilih
-    
-    // const bukuTerpilih = document.querySelector("#chosen_book");
-    // bukuTerpilih.textContent = `${chosenBook}`
 
+    const book_data = await getBooksById(chosenBookId);
+    const book = book_data[0]
     
-
     const chosenBookContainer = document.getElementById("chosen_book");
     chosenBookContainer.innerHTML = "";
 
@@ -213,19 +217,19 @@
     bookContent.className = "flex flex-col rounded-lg md:flex-row p-2 h-100"
 
     bookContent.innerHTML = `
-    <img class="w-16 h-24 object-cover rounded-lg md:h-32 md:w-32" src="" />
+    <img class="w-16 h-24 object-cover rounded-lg md:h-32 md:w-32" src="${book.fields.thumbnail}" />
     <div class="flex flex-col p-2">
         <h5 class="mb-1 text-lg font-medium text-black">
-          Judul: ${chosenBook}
+          Judul: ${book.fields.title}
         </h5>
         <p class="mb-1 text-sm text-black">
-            Author: ${chosenBook}
+            Author: ${book.fields.authors}
         </p>
         <p class="mb-1 text-sm text-black">
-            Published: ${chosenBook}
+            Published: ${book.fields.published_date}
         </p>
         <p class="mb-1 text-sm text-black">
-            Pages: ${chosenBook}
+            Pages: ${book.fields.page_count}
         </p>
     </div>
     `;
@@ -248,6 +252,17 @@
   }
 
   refreshCards();
+
+  function addThread() {
+    fetch(`/reachbuddy/add_item_ajax/${chosenBookId}`, {
+        method: "POST",
+        body: new FormData(document.querySelector('#form'))
+    })
+
+    document.getElementById("form").reset()
+    return false
+    }
+    document.getElementById("button_post").onclick = addThread
 </script>
 
 
