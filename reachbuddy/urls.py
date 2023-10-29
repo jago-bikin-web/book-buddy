@@ -5,7 +5,7 @@ app_name = 'reachbuddy'
 
 urlpatterns = [
     path('', show_reachbuddy, name='show_reachbuddy'),
-    path('create-thread', create_thread, name='create_thread'),
+    #path('create-thread', create_thread, name='create_thread'),
     path('json/', show_json, name='show_json'), 
     path('json_book/', show_json_book, name='show_json_book'), 
     path('trash_thread/<int:id>', trash_thread, name='trash_thread'),
