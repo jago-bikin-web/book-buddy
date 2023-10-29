@@ -51,7 +51,7 @@
 
     .pagination-button {
         cursor: pointer;
-        background-color: #007bff;
+        background-color: #b4b108;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -193,7 +193,7 @@
 
 #book-form button[type="submit"] {
     display: inline-block;
-    background-color: #007BFF;
+    background-color: #b4b108;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -214,7 +214,7 @@
 .button-req {
     display: inline-block;
     padding: 10px 20px; /* Sesuaikan ukuran padding sesuai kebutuhan */
-    background-color: #007BFF; /* Warna latar belakang tombol */
+    background-color: #b4b108; /* Warna latar belakang tombol */
     color: #fff; /* Warna teks tombol */
     border: none;
     border-radius: 5px; /* Membuat sudut tombol melengkung */
@@ -228,6 +228,46 @@
 
 .button:hover {
     background-color: #202327; /* Warna latar belakang saat kursor diarahkan */
+}
+
+.card-container2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.custom-card2 {
+    text-align: center;
+    width: 800px;
+    padding: 20px;
+    border: 4px solid #b4b108;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: white;
+}
+
+.centered {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#form_table {
+    width: 800px;
+}
+
+#form_table th {
+    width: 50%;
+}
+
+#button_add {
+    display: inline-block;
+    margin-top: 10px; /* Atur jarak dari elemen form di atas tombol */
+    background-color: #b4b108; /* Ganti dengan warna latar belakang yang Anda inginkan */
+    color: white; /* Warna teks */
+    padding: 10px 20px; /* Atur ukuran tombol */
+    border: none; /* Hapus border */
+    border-radius: 5px; /* Atur sudut tombol */
 }
 
 /* Tambahkan CSS tambahan sesuai kebutuhan */

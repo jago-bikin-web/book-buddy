@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from book.models import Book
 from findbuddy.models import BookFind
 from findbuddy.forms import BookForm
+from main.models import Profile
 
 # Create your views here.
 def show_json(request):
@@ -49,16 +50,17 @@ def get_book_json(request):
 
 @csrf_exempt
 def add_request_ajax(request):
-    if request.method == 'POST':
-        title = request.POST.get("title")
-        author = request.POST.get("author")
+    user = Profile.objects.get(user=request.user)
+    if user.is_member():
+        if request.method == 'POST':
+            title = request.POST.get("title")
+            author = request.POST.get("author")
 
-        new_request = BookFind(title=title, author=author)
-        new_request.save()
+            new_request = BookFind(title=title, author=author)
+            new_request.save()
 
-        return HttpResponse(b"CREATED", status=201)
-
-    return HttpResponseNotFound()
+            return HttpResponse(b"CREATED", status=201)
+        return HttpResponseNotFound()
 
 
 def get_request_json(request):
