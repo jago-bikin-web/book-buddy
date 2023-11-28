@@ -1,3 +1,5 @@
+![Deploy](https://github.com/jago-bikin-web/books-buddy/actions/workflows/pbp-deploy.yml/badge.svg)
+<hr/>
 # TUGAS KELOMPOK PROYEK TENGAH SEMESTER PEMROGRAMAN BERBASIS PLATFORM :computer:
 
 ### Kelompok E06:

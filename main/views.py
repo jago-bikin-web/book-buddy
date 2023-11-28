@@ -1,10 +1,9 @@
 from random import randint
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -16,7 +15,7 @@ from mybuddy.models import OwnedBook
 
 
 def show_landing_page(request):
-    
+
     context = {
         'user': None,
         'profile_picture': None
@@ -31,6 +30,7 @@ def show_landing_page(request):
 
     return render(request, "main.html", context)
 
+
 @login_required(login_url='main:login')
 def home(request):
     user = Profile.objects.get(user=request.user)
@@ -40,11 +40,13 @@ def home(request):
     context = {
         'user': user.full_name,
         'profile_picture': profile_picture,
-        'buku' : banyak_buku
+        'buku': banyak_buku
     }
 
     return render(request, "home.html", context)
 
+
+@csrf_exempt
 def register_user(request):
     if request.method == 'POST':
         full_name = request.POST.get("full_name")
@@ -55,21 +57,33 @@ def register_user(request):
         password2 = request.POST.get("password2")
 
         if password1 == password2:
-            user = User.objects.create_user(username=username, password=password1)
-            
-            new_user = Profile(user=user, full_name=full_name, email=email, status=status, profile_picture=f"https://i.pravatar.cc/48?img={randint(1,70)}")
+            user = User.objects.filter(username=username)
+            if len(user) == 0:
+                user = User.objects.create_user(
+                    username=username, password=password1)
 
-            new_user.save()
-            return redirect('main:login')
+                new_user = Profile(user=user, full_name=full_name, email=email, status=status,
+                                   profile_picture=f"https://i.pravatar.cc/48?img={randint(1, 70)}")
+
+                new_user.save()
+                return redirect('main:login')
+            else:
+                messages.info(
+                    request, 'Sorry, incorrect username or password. Please try again.')
+                return redirect('main:register')
+
         else:
-            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+            messages.info(
+                request, 'Sorry, incorrect username or password. Please try again.')
             return redirect('main:register')
-    
+
     if request.user.is_authenticated:
         return redirect('main:home')
     else:
         return render(request, 'signup.html')
 
+
+@csrf_exempt
 def login_user(request):
     next = request.GET.get('next', None)
     if request.method == 'POST':
@@ -87,9 +101,10 @@ def login_user(request):
             response.set_cookie('user', user_login.full_name)
             return response
         else:
-            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+            messages.info(
+                request, 'Sorry, incorrect username or password. Please try again.')
             return redirect('main:login')
-        
+
     if request.user.is_authenticated:
         return redirect('main:home')
     else:

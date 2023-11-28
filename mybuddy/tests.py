@@ -37,22 +37,22 @@ class AppTest(TestCase):
     # --------------------- URL ---------------------------- #
     def test_show_my_buddy_url(self):
         url = reverse("mybuddy:my_buddy")
-        self.assertEquals(resolve(url).func, show_my_buddy)
+        self.assertEqual(resolve(url).func, show_my_buddy)
     def test_add_buddy_url(self):
         url = reverse("mybuddy:add_buddy")
-        self.assertEquals(resolve(url).func, add_buddy)
+        self.assertEqual(resolve(url).func, add_buddy)
     def test_get_own_book_url(self):
         url = reverse("mybuddy:get_owned_book")
-        self.assertEquals(resolve(url).func, get_owned_book)
+        self.assertEqual(resolve(url).func, get_owned_book)
     def test_update_own_book_url(self):
         url = reverse("mybuddy:update_own_book")
-        self.assertEquals(resolve(url).func, update_own_book) 
+        self.assertEqual(resolve(url).func, update_own_book) 
     def test_add_page_track_url(self):
         url = reverse("mybuddy:add_page_track")
-        self.assertEquals(resolve(url).func, add_page_track)
+        self.assertEqual(resolve(url).func, add_page_track)
     def test_sub_page_track_url(self):
         url = reverse("mybuddy:sub_page_track")
-        self.assertEquals(resolve(url).func, sub_page_track)
+        self.assertEqual(resolve(url).func, sub_page_track)
 
     # --------------------- Views ---------------------------- #
     def test_view_show_mybuddy(self):
