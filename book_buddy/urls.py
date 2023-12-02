@@ -27,6 +27,7 @@ urlpatterns = [
     path('eventbuddy/', include('eventbuddy.urls')),
     path('findbuddy/', include('findbuddy.urls')),
     path('reachbuddy/', include('reachbuddy.urls')),
+    path('auth/', include('authentication.urls'))
 ]
 
 # if settings.DEBUG:
