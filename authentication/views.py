@@ -2,7 +2,7 @@ from random import randint
 
 from django.http import JsonResponse
 
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 
@@ -18,10 +18,10 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             if user.is_active:
-                login(request, user)
+                auth_login(request, user)
                 user_login = Profile.objects.get(user=user)
                 response = JsonResponse({
-                    "username": user.full_name,
+                    "username": user_login.full_name,
                     "status": True,
                     "message": "Login sukses!"
                 }, status=200)
@@ -30,14 +30,14 @@ def login(request):
             else:
                 return JsonResponse({
                     "status": False,
-                    "message": "Login gagal, akun dinonaktifkan."
+                    "message": "Akun telah dinonaktifkan."
                 }, status=401)
 
         else:
             return JsonResponse({
                 "status": False,
-                "message": "Login gagal, periksa kembali email atau kata sandi."
-            }, status=401)
+                "message": "Periksa kembali email atau kata sandi."
+            }, status=400)
     else:
         return JsonResponse({
             "status": False,
@@ -46,7 +46,7 @@ def login(request):
 
 
 @csrf_exempt
-def register_user(request):
+def register(request):
     if request.method == 'POST':
         full_name = request.POST.get("full_name")
         username = request.POST.get("username")
@@ -55,33 +55,47 @@ def register_user(request):
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
 
+        print(request.POST)
+        print(full_name)
+        print(username)
+        print(email)
+        print(status)
+        print(password1)
+        print(password2)
+
         if password1 == password2:
-            user = User.objects.filter(username=username)
-            if len(user) == 0:
-                user = User.objects.create_user(
-                    username=username, password=password1)
+            try:
+                user = User.objects.filter(username=username)
+                if len(user) == 0:
+                    user = User.objects.create_user(
+                        username=username, password=password1)
 
-                new_user = Profile(user=user, full_name=full_name, email=email, status=status,
-                                   profile_picture=f"https://i.pravatar.cc/48?img={randint(1, 70)}")
+                    new_user = Profile(user=user, full_name=full_name, email=email, status=status,
+                                       profile_picture=f"https://i.pravatar.cc/48?img={randint(1, 70)}")
 
-                new_user.save()
-                login(request, user)
-                return JsonResponse({
-                    "username": new_user.full_name,
-                    "status": True,
-                    "message": "Register sukses!"
-                }, status=200)
+                    new_user.save()
+                    login(request, user)
+                    return JsonResponse({
+                        "username": new_user.full_name,
+                        "status": True,
+                        "message": "Register sukses!"
+                    }, status=200)
 
-            else:
+                else:
+                    return JsonResponse({
+                        "status": False,
+                        "message": "Username sudah pernah dibuat!"
+                    }, status=400)
+            except:
                 return JsonResponse({
                     "status": False,
-                    "message": "Register gagal, username sudah pernah dibuat!"
-                }, status=400)
+                    "message": "Server error."
+                }, status=500)
 
         else:
             return JsonResponse({
                 "status": False,
-                "message": "Register gagal, kata santi tidak sama!"
+                "message": "Password tidak sama!"
             }, status=401)
 
     else:
@@ -93,9 +107,9 @@ def register_user(request):
 
 @csrf_exempt
 def logout(request):
-    username = request.user.username
 
     try:
+        username = request.user.username
         logout(request)
         return JsonResponse({
             "username": username,
@@ -105,5 +119,5 @@ def logout(request):
     except:
         return JsonResponse({
             "status": False,
-            "message": "Logout gagal."
+            "message": "Logout gagal!"
         }, status=401)
