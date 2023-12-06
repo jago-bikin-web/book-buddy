@@ -1,6 +1,7 @@
+import json
 from random import randint
 
-from django.http import JsonResponse
+from django.http import HttpRequest, JsonResponse
 
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.models import User
@@ -10,7 +11,7 @@ from main.models import Profile
 
 
 @csrf_exempt
-def login(request):
+def login(request: HttpRequest):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -46,22 +47,15 @@ def login(request):
 
 
 @csrf_exempt
-def register(request):
+def register(request: HttpRequest):
     if request.method == 'POST':
-        full_name = request.POST.get("full_name")
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        status = request.POST.get("status")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
-
-        print(request.POST)
-        print(full_name)
-        print(username)
-        print(email)
-        print(status)
-        print(password1)
-        print(password2)
+        data = json.loads(request.body)
+        full_name = data.get("full_name")
+        username = data.get("username")
+        email = data.get("email")
+        status = data.get("status")
+        password1 = data.get("password1")
+        password2 = data.get("password2")
 
         if password1 == password2:
             try:
@@ -74,7 +68,7 @@ def register(request):
                                        profile_picture=f"https://i.pravatar.cc/48?img={randint(1, 70)}")
 
                     new_user.save()
-                    login(request, user)
+                    auth_login(request, user)
                     return JsonResponse({
                         "username": new_user.full_name,
                         "status": True,
@@ -107,7 +101,6 @@ def register(request):
 
 @csrf_exempt
 def logout(request):
-
     try:
         username = request.user.username
         logout(request)
