@@ -38,7 +38,6 @@ def create_event(request):
                 event.user = request.user
                 event.save()
                 return HttpResponse(b"CREATED", status=201)
-
         else:
             return HttpResponseNotFound()
 
