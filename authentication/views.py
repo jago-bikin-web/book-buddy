@@ -17,16 +17,21 @@ def login(request: HttpRequest):
         password = request.POST.get('password')
 
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             if user.is_active:
                 auth_login(request, user)
                 user_login = Profile.objects.get(user=user)
                 response = JsonResponse({
-                    "username": user_login.full_name,
+                    "username": username,
+                    "fullName": user_login.full_name,
+                    "email": user_login.email,
+                    "role": user_login.status,
+                    "profilePicture": user_login.profile_picture,
                     "status": True,
                     "message": "Login sukses!"
                 }, status=200)
-                response.set_cookie('user', user_login.full_name)
+
                 return response
             else:
                 return JsonResponse({
@@ -70,9 +75,13 @@ def register(request: HttpRequest):
                     new_user.save()
                     auth_login(request, user)
                     return JsonResponse({
-                        "username": new_user.full_name,
+                        "username": username,
+                        "fullName": full_name,
+                        "email": email,
+                        "role": status,
+                        "profilePicture": new_user.profile_picture,
                         "status": True,
-                        "message": "Register sukses!"
+                        "message": "Register dan login berhasil!"
                     }, status=200)
 
                 else:
@@ -100,12 +109,12 @@ def register(request: HttpRequest):
 
 
 @csrf_exempt
-def logout(request):
+def logout(request: HttpRequest):
     try:
-        username = request.user.username
+        full_name = request.user.full_name
         logout(request)
         return JsonResponse({
-            "username": username,
+            "fullName": full_name,
             "status": True,
             "message": "Logout berhasil!"
         }, status=200)
