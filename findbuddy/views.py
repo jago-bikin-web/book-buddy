@@ -29,11 +29,15 @@ def show_findbuddy(request):
     books = Book.objects.all()
     form = BookForm(request.POST or None)
     categories = set([book.categories for book in books])
+    user = Profile.objects.get(user=request.user)
+    profile_picture = user.profile_picture
 
     context = {
         'books' : books,
         'categories': categories,
-        'form': form
+        'form': form,
+        'user': user.full_name,
+        'profile_picture': profile_picture,
     }
 
     return render(request, "findbuddy.html", context)
