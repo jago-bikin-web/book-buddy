@@ -3,7 +3,7 @@ from random import randint
 
 from django.http import HttpRequest, JsonResponse
 
-from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 
@@ -25,6 +25,7 @@ def login(request: HttpRequest):
                 response = JsonResponse({
                     "username": username,
                     "fullName": user_login.full_name,
+                    "userId": user.pk,
                     "email": user_login.email,
                     "role": user_login.status,
                     "profilePicture": user_login.profile_picture,
@@ -77,6 +78,7 @@ def register(request: HttpRequest):
                     return JsonResponse({
                         "username": username,
                         "fullName": full_name,
+                        "userId": user.pk,
                         "email": email,
                         "role": status,
                         "profilePicture": new_user.profile_picture,
@@ -110,16 +112,10 @@ def register(request: HttpRequest):
 
 @csrf_exempt
 def logout(request: HttpRequest):
-    try:
-        full_name = request.user.full_name
-        logout(request)
-        return JsonResponse({
-            "fullName": full_name,
-            "status": True,
-            "message": "Logout berhasil!"
-        }, status=200)
-    except:
-        return JsonResponse({
-            "status": False,
-            "message": "Logout gagal!"
-        }, status=401)
+    full_name = Profile.objects.get(user=request.user).full_name
+    auth_logout(request)
+    return JsonResponse({
+        "fullName": full_name,
+        "status": True,
+        "message": "Logout berhasil!"
+    }, status=200)
