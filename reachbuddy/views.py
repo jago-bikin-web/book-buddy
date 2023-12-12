@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from reachbuddy.models import Thread
 from main.models import Profile
@@ -88,6 +88,31 @@ def get_book_json_id(request, id):
 def get_threads_json(request):
     all_threads = Thread.objects.all()
     return HttpResponse(serializers.serialize('json', all_threads))
+
+def get_threads_flutter(request):
+    threads = Thread.objects.all()
+    threads_posts = []
+
+    for thread in threads:
+        book = Book.objects.get(id=thread.book.pk)
+        user_profile = Profile.objects.get(user=thread.user)
+        
+        thread_item = {
+            'book_title': book.title,
+            'book_image': book.thumbnail,
+            'book_author': book.authors,
+            'book_published': book.published_date,
+            'book_page': book.page_count,
+
+            'profile_image': user_profile.profile_picture,
+            'profile_name': user_profile.full_name,
+            'date': thread.date_added,
+            'review': thread.review,
+            'likes': thread.likes,
+        }
+        threads_posts.append(thread_item)
+
+    return JsonResponse(threads_posts, safe=False)
 
 # def get_book_json_by_id(request, book_id):
 #     try:

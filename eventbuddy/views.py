@@ -38,9 +38,12 @@ def create_event(request):
                 event.user = request.user
                 event.save()
                 return HttpResponse(b"CREATED", status=201)
-
         else:
             return HttpResponseNotFound()
+        
+def show_json(request):
+    data = Event.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 @login_required(login_url='main:login')
 def get_event_json(request):
