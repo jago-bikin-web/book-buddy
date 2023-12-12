@@ -12,4 +12,5 @@ urlpatterns = [
     path('update-own-book/', update_own_book, name='update_own_book'),
     path('add-page-track/', add_page_track, name='add_page_track'),
     path('sub-page-track/', sub_page_track, name='sub_page_track'),
+    path('update-book-flutter/', update_book_flutter, name='update_book_flutter'),
 ]

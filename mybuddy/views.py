@@ -52,6 +52,38 @@ def update_own_book(request):
 
 
 @csrf_exempt
+def update_book_flutter(request):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        pk = data.get("pk")
+        page_track = int(data.get("page"))
+        status = data.get("status")
+        ulasan = data.get("ulasan")
+
+        buku = OwnedBook.objects.get(pk=pk)
+        buku_asli = Book.objects.get(pk=buku.owned_book.pk)
+
+        if buku_asli.page_count < page_track:
+            page_track = buku_asli.page_count
+            status = 'F'
+        elif page_track <= 0:
+            page_track = 0
+
+        if ulasan == "":
+            ulasan = buku.ulasan
+
+        buku.page_track = page_track
+        buku.status = status
+        buku.ulasan = ulasan
+
+        buku.save()
+
+        response = HttpResponse(status=200)
+        return response
+    return HttpResponseNotFound()
+
+
+@csrf_exempt
 @login_required(login_url='main:login')
 def show_my_buddy(request):
 
@@ -106,21 +138,23 @@ def add_buddy(request):
     return render(request, "addbuddy.html", context)
 
 
-def get_owned_book(request : HttpResponse):
+def get_owned_book(request: HttpResponse):
     username = request.GET.get('username', None)
     if (username == None):
         user = Profile.objects.get(user=request.user)
     else:
         if (username == 'null'):
-            return
+            return HttpResponse(status=500)
         user = User.objects.get(username=username)
         user = Profile.objects.get(user=user)
+
     own_book = list(OwnedBook.objects.filter(user=user))
 
     data = []
 
     for buku in own_book:
         buku_asli = Book.objects.get(pk=buku.owned_book.pk)
+
         each_data = {
             'pk': buku.pk,
             'thumbnail': buku_asli.thumbnail,
@@ -131,6 +165,7 @@ def get_owned_book(request : HttpResponse):
             'page_track': buku.page_track,
             'ulasan': buku.ulasan,
             'status': buku.status,
+            'publish_date': buku_asli.published_date.strftime("%Y-%m-%d"),
         }
         if each_data['status'] == 'W':
             each_data['status'] = 'Wishlist'
