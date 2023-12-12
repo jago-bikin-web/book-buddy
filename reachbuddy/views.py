@@ -106,7 +106,7 @@ def get_threads_flutter(request):
 
             'profile_image': user_profile.profile_picture,
             'profile_name': user_profile.full_name,
-            'date': thread.date_added.strftime("%b %d"),
+            'date': thread.date_added,
             'review': thread.review,
             'likes': thread.likes,
         }
