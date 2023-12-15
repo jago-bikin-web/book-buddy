@@ -57,8 +57,7 @@ def add_book_from_google_books_api(request):
 
     for subject in query:
         for q in query[subject]:
-            api_url = f"https://www.googleapis.com/books/v1/volumes?q={
-                q}+subject:{subject}&orderBy=newest&key={api_key}"
+            api_url = f"https://www.googleapis.com/books/v1/volumes?q={q}+subject:{subject}&orderBy=newest&key={api_key}"
 
             response = requests.get(api_url)
 
@@ -89,8 +88,7 @@ def add_book_from_google_books_api(request):
     subjects = ["cooking", "adventure", "action", "history"]
 
     for subject in subjects:
-        api_url = f"https://www.googleapis.com/books/v1/volumes?q=subject:{
-            subject}&orderBy=newest&key={api_key}"
+        api_url = f"https://www.googleapis.com/books/v1/volumes?q=subject:{subject}&orderBy=newest&key={api_key}"
         response = requests.get(api_url)
 
         if response.status_code == 200:
@@ -104,8 +102,7 @@ def add_book_from_google_books_api(request):
         else:
             return JsonResponse({'message': 'Gagal mengambil data dari API Google Books.'}, status=400)
 
-    api_url = f"https://www.googleapis.com/books/v1/volumes?q=random&orderBy=newest&key={
-        api_key}&maxResults=40"
+    api_url = f"https://www.googleapis.com/books/v1/volumes?q=random&orderBy=newest&key={api_key}&maxResults=40"
     response = requests.get(api_url)
 
     data_books = Book.objects.all()
@@ -132,7 +129,9 @@ def get_books(request):
     return HttpResponse(serializers.serialize("json", data_books), content_type="application/json")
 
 
-def book_list(request):
-    categories = Book.categories.objects.all()  # Ambil semua kategori buku
-    context = {'categories': categories}
-    return render(request, 'book/book_list.html', context)
+def list_category(request):
+    categories = Book.objects.all().values_list('categories')
+    unique_values = set(item[0] for item in categories if item[0]) 
+    data = list(unique_values)
+    
+    return JsonResponse(data, safe=False)
