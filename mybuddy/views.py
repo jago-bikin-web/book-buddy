@@ -170,7 +170,7 @@ def get_owned_book(request: HttpResponse):
         if each_data['status'] == 'W':
             each_data['status'] = 'Wishlist'
         elif each_data['status'] == 'F':
-            each_data['status'] = 'Finish'
+            each_data['status'] = 'Finished'
         else:
             each_data['status'] = 'Reading'
         data.append(each_data)

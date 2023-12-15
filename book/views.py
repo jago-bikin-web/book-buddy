@@ -126,7 +126,9 @@ def get_books(request):
     return HttpResponse(serializers.serialize("json", data_books), content_type="application/json")
 
 
-def book_list(request):
-    categories = Book.categories.objects.all()  # Ambil semua kategori buku
-    context = {'categories': categories}
-    return render(request, 'book/book_list.html', context)
+def list_category(request):
+    categories = Book.objects.all().values_list('categories')
+    unique_values = set(item[0] for item in categories if item[0]) 
+    data = list(unique_values)
+    
+    return JsonResponse(data, safe=False)
