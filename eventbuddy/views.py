@@ -1,4 +1,5 @@
-from django.http import HttpResponse, HttpResponseNotFound
+import json
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 from book.models import Book
 from eventbuddy.models import Event
@@ -128,4 +129,57 @@ def add_event_ajax(request):
             return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
+
+@csrf_exempt
+def create_event_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+        user_book = request.user.book
+
+        new_event = Event.objects.create(
+            user=request.user,
+            book=user_book,
+            name=data["name"],
+            date=data.get("date"),  # Assuming date is part of the data
+            description=data["description"],
+        )
+
+        new_event.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
+
+def get_event_flutter(request):
+    events = Event.objects.all()
+    list_event = []
+
+    for e in events:
+        book = Book.objects.get(pk=e.book.pk)
+        user = Profile.objects.get(user=e.user)
+        
+        participants_data = e.participant.all()
+        participants_list = []
+        for participant in e.participant.all():
+            participant_item = {
+                "participant_name": participant.full_name,
+                # tambahkan atribut lain sesuai kebutuhan
+            }
+            participants_list.append(participant_item)
+
+        event_item = {
+            "book_thumbnail": book.thumbnail,
+            "event_name": e.name,
+            "event_description": e.description,
+            "event_date": e.date.strftime("%Y-%m-%d"),
+            "event_user_name": user.full_name,
+            "event_user_email": user.email,
+            "event_participants": participants_list,
+        }
+        list_event.append(event_item)
+
+    return JsonResponse(list_event, safe=False)
+
 # Create your views here.
