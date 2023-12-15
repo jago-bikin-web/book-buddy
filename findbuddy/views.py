@@ -1,22 +1,13 @@
 from django.shortcuts import render
-from django.http import *
-from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.core import serializers
-from django.shortcuts import redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages  
-from django.contrib.auth import authenticate, login
-from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-import datetime
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from book.models import Book
 from findbuddy.models import BookFind
 from findbuddy.forms import BookForm
 from main.models import Profile
+from django.db.models import Q
 
 # Create your views here.
 def show_json(request):
@@ -64,3 +55,18 @@ def add_request_ajax(request):
 def get_request_json(request):
     request_item = BookFind.objects.all()
     return HttpResponse(serializers.serialize('json', request_item))
+
+
+def get_search_books(request):
+    if request.method == 'GET':
+        query = request.GET.get('query', '')
+        filter = request.GET.get('filter', '')
+
+        print(filter)
+
+        if (filter == " All "):
+            filter = ""
+
+        results = Book.objects.filter(title__contains=query, categories__contains=filter)
+
+        return HttpResponse(serializers.serialize('json', results))
