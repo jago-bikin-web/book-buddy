@@ -11,6 +11,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from main.models import Profile
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+
 
 @login_required(login_url='main:login')
 def show_eventbuddy(request):
@@ -135,21 +137,28 @@ def create_event_flutter(request):
     if request.method == 'POST':
         
         data = json.loads(request.body)
-        user_book = request.user.book
+        book_pk = data.get("pkBook")
+        book = Book.objects.get(pk = book_pk)
+        user = data.get("username")
+        user = User.objects.get(username = user)
+        name = data.get("name")
+        date = data.get("date")
+        description = data.get("description")
+
 
         new_event = Event.objects.create(
-            user=request.user,
-            book=user_book,
-            name=data["name"],
-            date=data.get("date"),  # Assuming date is part of the data
-            description=data["description"],
+            user=user,
+            book=book,
+            name=name,
+            date=date,
+            description=description,
         )
 
         new_event.save()
 
-        return JsonResponse({"status": "success"}, status=200)
+        return JsonResponse({"status": True}, status=200)
     else:
-        return JsonResponse({"status": "error"}, status=401)
+        return JsonResponse({"status": False}, status=401)
     
 
 def get_event_flutter(request):
@@ -160,7 +169,6 @@ def get_event_flutter(request):
         book = Book.objects.get(pk=e.book.pk)
         user = Profile.objects.get(user=e.user)
         
-        participants_data = e.participant.all()
         participants_list = []
         for participant in e.participant.all():
             participant_item = {
@@ -181,5 +189,3 @@ def get_event_flutter(request):
         list_event.append(event_item)
 
     return JsonResponse(list_event, safe=False)
-
-# Create your views here.
