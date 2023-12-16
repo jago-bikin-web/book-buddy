@@ -105,7 +105,7 @@ def get_threads_flutter(request):
             'book_page': book.page_count,
 
             'profile_image': user_profile.profile_picture,
-            'profile_name': user_profile.full_name,
+            'profile_name': thread.user.username,
             'date': thread.date_added,
             'review': thread.review,
             'likes': thread.likes,
