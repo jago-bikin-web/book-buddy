@@ -71,8 +71,7 @@ def add_book_from_google_books_api(request):
             else:
                 return JsonResponse({'message': 'Gagal mengambil data dari API Google Books.'}, status=400)
 
-    api_url = f"https://www.googleapis.com/books/v1/volumes?q=subject:science&orderBy=newest&maxResults=20&key={
-        api_key}"
+    api_url = f"https://www.googleapis.com/books/v1/volumes?q=subject:science&orderBy=newest&maxResults=20&key={api_key}"
 
     response = requests.get(api_url)
     if response.status_code == 200:
