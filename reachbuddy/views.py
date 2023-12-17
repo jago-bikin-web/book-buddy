@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
@@ -89,6 +90,10 @@ def get_threads_json(request):
     all_threads = Thread.objects.all()
     return HttpResponse(serializers.serialize('json', all_threads))
 
+def get_book_json_id_flutter(request, id):
+    chosen_book = Book.objects.get(pk=id)
+    return HttpResponse(serializers.serialize('json', [chosen_book]))
+
 def get_threads_flutter(request):
     threads = Thread.objects.all()
     threads_posts = []
@@ -98,6 +103,7 @@ def get_threads_flutter(request):
         user_profile = Profile.objects.get(user=thread.user)
         
         thread_item = {
+            'book_id': book.pk,
             'book_title': book.title,
             'book_image': book.thumbnail,
             'book_author': book.authors,
@@ -170,3 +176,26 @@ def delete_thread_ajax(request, id):
         return HttpResponse(b"DELETED", status=200)
     
     return HttpResponseNotFound()
+
+@csrf_exempt
+def create_thread_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        book_pk = data.get("pkBook")
+        book = Book.objects.get(pk = book_pk)
+        user = data.get("username")
+        user = User.objects.get(username = user)
+        review = data.get("review")
+
+        new_thread = Thread.objects.create(
+            user=user,
+            book=book,
+            review=review,
+        )
+
+        new_thread.save()
+
+        return JsonResponse({"status": True}, status=200)
+    else:
+        return JsonResponse({"status": False}, status=401)
