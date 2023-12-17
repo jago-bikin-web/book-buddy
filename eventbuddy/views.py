@@ -159,7 +159,26 @@ def create_event_flutter(request):
         return JsonResponse({"status": True}, status=200)
     else:
         return JsonResponse({"status": False}, status=401)
-    
+
+@csrf_exempt
+def regis_flutter(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        event_pk = data.get("id")
+        events = Event.objects.get(pk = event_pk)
+        user = data.get("username")
+        user = User.objects.get(username = user)
+        profile = request.user.profile
+
+        if request.user != events.user:
+            if events.participant.filter(pk=profile.pk).exists():
+                return JsonResponse({"status": 1}, status=401)
+            else:
+                events.participant.add(profile)
+                return JsonResponse({"status": 2}, status=200)
+        else:
+            return JsonResponse({"status": 3}, status=401)
 
 def get_event_flutter(request):
     events = Event.objects.all()
@@ -167,7 +186,7 @@ def get_event_flutter(request):
 
     for e in events:
         book = Book.objects.get(pk=e.book.pk)
-        user = Profile.objects.get(user=e.user)
+        user_event = Profile.objects.get(user=e.user)
         
         participants_list = []
         for participant in e.participant.all():
@@ -178,12 +197,13 @@ def get_event_flutter(request):
             participants_list.append(participant_item)
 
         event_item = {
+            "event_pk": e.pk, 
             "book_thumbnail": book.thumbnail,
             "event_name": e.name,
             "event_description": e.description,
             "event_date": e.date.strftime("%Y-%m-%d"),
-            "event_user_name": user.full_name,
-            "event_user_email": user.email,
+            "event_user_fullname": user_event.full_name,
+            "event_username": user_event.user.username,
             "event_participants": participants_list,
         }
         list_event.append(event_item)
