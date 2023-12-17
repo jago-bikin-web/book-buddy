@@ -18,4 +18,5 @@ urlpatterns = [
     path('create_thread_ajax/<int:id>/', create_thread_ajax, name='create_thread_ajax'),
     path('delete_thread_ajax/<int:id>/', delete_thread_ajax, name='delete_thread_ajax'),
     path('get-threads-flutter/', get_threads_flutter, name='get_threads_flutter'),
+    path('get-thread-detail-flutter/<int:id>/', get_thread_detail_flutter, name='get_thread_detail_flutter'),
 ]
