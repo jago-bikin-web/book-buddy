@@ -114,6 +114,28 @@ def get_threads_flutter(request):
 
     return JsonResponse(threads_posts, safe=False)
 
+def get_thread_detail_flutter(request, id):
+    thread = Thread.objects.get(pk=id)
+
+    book = Book.objects.get(id=thread.book.pk)
+    user_profile = Profile.objects.get(user=thread.user)
+    
+    thread_item = {
+        'book_title': book.title,
+        'book_image': book.thumbnail,
+        'book_author': book.authors,
+        'book_published': book.published_date,
+        'book_page': book.page_count,
+
+        'profile_image': user_profile.profile_picture,
+        'profile_name': thread.user.username,
+        'date': thread.date_added,
+        'review': thread.review,
+        'likes': thread.likes,
+    }
+
+    return JsonResponse(thread_item, safe=False)
+
 # def get_book_json_by_id(request, book_id):
 #     try:
 #         chosen_book = Book.objects.get(book_id=book_id)
