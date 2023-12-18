@@ -68,7 +68,7 @@ def get_search_books(request):
         if (filter == " All "):
             filter = ""
 
-        results = Book.objects.filter(title__contains=query, categories__contains=filter)
+        results = Book.objects.filter(title__icontains=query, categories__icontains=filter)
 
         return HttpResponse(serializers.serialize('json', results))
 
