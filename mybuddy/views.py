@@ -3,7 +3,7 @@ import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.contrib.auth.models import User
 
 from main.models import Profile
@@ -81,6 +81,32 @@ def update_book_flutter(request):
         response = HttpResponse(status=200)
         return response
     return HttpResponseNotFound()
+
+
+@csrf_exempt
+def add_book_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode("utf-8"))
+        book = Book.objects.get(pk=data["pk"])
+        user = User.objects.get(username=data["username"]);
+        user_asli = Profile.objects.get(user=user)
+
+        book_have = OwnedBook.objects.filter(owned_book=book);
+
+        
+        if len(book_have) == 0:
+            new_book = OwnedBook(user=user_asli, owned_book=book,
+                                page_track=0, ulasan="", status="W")
+      
+            new_book.save()
+            return JsonResponse({
+                "status": True
+            }, status=201)
+        else:
+            return JsonResponse({
+                "status": False,
+                "message": "You have already added this book to My Buddy"
+            }, status=201)
 
 
 @csrf_exempt
@@ -186,6 +212,7 @@ def add_page_track(request):
 
     if buku.page_track < buku_asli.page_count:
         buku.page_track += 1
+        buku.status = 'R'
         buku.save()
 
     if buku.page_track == buku_asli.page_count:
@@ -205,7 +232,7 @@ def sub_page_track(request):
         buku.page_track -= 1
         buku.save()
 
-    if buku.page_track < buku_asli.page_count:
+    if buku.page_track < buku_asli.page_count and buku.page_track != 0:
         buku.status = 'R'
         buku.save()
 
