@@ -115,6 +115,8 @@ def get_threads_flutter(request):
             'date': thread.date_added,
             'review': thread.review,
             'likes': thread.likes,
+
+            'thread_id': thread.pk,
         }
         threads_posts.append(thread_item)
 
@@ -138,6 +140,8 @@ def get_thread_detail_flutter(request, id):
         'date': thread.date_added,
         'review': thread.review,
         'likes': thread.likes,
+
+        'thread_id': thread.pk,
     }
 
     return JsonResponse(thread_item, safe=False)
