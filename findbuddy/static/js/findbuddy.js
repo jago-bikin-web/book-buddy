@@ -191,7 +191,6 @@ requestButton.addEventListener("click", function() {
 });
 
 function addRequest() {
-    console.log("MASUK SINI GA")
 
     fetch(`/findbuddy/add-request-ajax/`, {
         method: "POST",

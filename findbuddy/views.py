@@ -1,5 +1,6 @@
+import json
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -70,3 +71,18 @@ def get_search_books(request):
         results = Book.objects.filter(title__contains=query, categories__contains=filter)
 
         return HttpResponse(serializers.serialize('json', results))
+
+@csrf_exempt
+def create_request_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        # Periksa apakah pengguna yang membuat permintaan sesuai dengan pemilik produk
+        if request.user.is_authenticated:
+            new_product = BookFind.objects.create(
+                title=data["title"],
+                author=data["author"]
+            )
+            return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
