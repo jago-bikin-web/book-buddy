@@ -3,8 +3,8 @@ import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseNotFound
-
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.contrib.auth.models import User
 
 from main.models import Profile
 from book.models import Book
@@ -16,7 +16,7 @@ from mybuddy.forms import UpdateForm
 @csrf_exempt
 def update_own_book(request):
     if request.method == "POST":
-        
+
         form = UpdateForm(request.POST)
         if form.is_valid():
             pk_buku = request.COOKIES.get('book_update')
@@ -38,7 +38,7 @@ def update_own_book(request):
 
             if ulasan == "":
                 ulasan = buku.ulasan
-            
+
             buku.page_track = page_track
             buku.status = status
             buku.ulasan = ulasan
@@ -49,6 +49,65 @@ def update_own_book(request):
         response.delete_cookie('book_update')
         return response
     return HttpResponseNotFound()
+
+
+@csrf_exempt
+def update_book_flutter(request):
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        pk = data.get("pk")
+        page_track = int(data.get("page"))
+        status = data.get("status")
+        ulasan = data.get("ulasan")
+
+        buku = OwnedBook.objects.get(pk=pk)
+        buku_asli = Book.objects.get(pk=buku.owned_book.pk)
+
+        if buku_asli.page_count < page_track:
+            page_track = buku_asli.page_count
+            status = 'F'
+        elif page_track <= 0:
+            page_track = 0
+
+        if ulasan == "":
+            ulasan = buku.ulasan
+
+        buku.page_track = page_track
+        buku.status = status
+        buku.ulasan = ulasan
+
+        buku.save()
+
+        response = HttpResponse(status=200)
+        return response
+    return HttpResponseNotFound()
+
+
+@csrf_exempt
+def add_book_flutter(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode("utf-8"))
+        book = Book.objects.get(pk=data["pk"])
+        user = User.objects.get(username=data["username"]);
+        user_asli = Profile.objects.get(user=user)
+
+        book_have = OwnedBook.objects.filter(owned_book=book);
+
+        
+        if len(book_have) == 0:
+            new_book = OwnedBook(user=user_asli, owned_book=book,
+                                page_track=0, ulasan="", status="W")
+      
+            new_book.save()
+            return JsonResponse({
+                "status": True
+            }, status=201)
+        else:
+            return JsonResponse({
+                "status": False,
+                "message": "You have already added this book to My Buddy"
+            }, status=201)
+
 
 @csrf_exempt
 @login_required(login_url='main:login')
@@ -70,15 +129,17 @@ def show_my_buddy(request):
         own_book = OwnedBook.objects.get(pk=data["pk"])
 
         own_book_data = {
-            'page_track' : own_book.page_track,
-            'status' : own_book.status,
-            'ulasan' : own_book.ulasan,
+            'page_track': own_book.page_track,
+            'status': own_book.status,
+            'ulasan': own_book.ulasan,
         }
 
-        response = HttpResponse(json.dumps(own_book_data), content_type="application/json")
+        response = HttpResponse(json.dumps(
+            own_book_data), content_type="application/json")
         response.set_cookie('book_update', own_book.pk)
         return response
     return render(request, "mybuddy.html", context)
+
 
 @csrf_exempt
 @login_required(login_url='main:login')
@@ -95,39 +156,53 @@ def add_buddy(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode("utf-8"))
         book = Book.objects.get(pk=data["pk"])
-        
-        new_book = OwnedBook(user=user, owned_book=book, page_track=0, ulasan="", status="W")
+
+        new_book = OwnedBook(user=user, owned_book=book,
+                             page_track=0, ulasan="", status="W")
         new_book.save()
-        return HttpResponse("ADDED",status=201)
+        return HttpResponse("ADDED", status=201)
     return render(request, "addbuddy.html", context)
 
-def get_owned_book(request):
-    user = Profile.objects.get(user=request.user)
+
+def get_owned_book(request: HttpResponse):
+    username = request.GET.get('username', None)
+    if (username == None):
+        user = Profile.objects.get(user=request.user)
+    else:
+        if (username == 'null'):
+            return HttpResponse(status=500)
+        user = User.objects.get(username=username)
+        user = Profile.objects.get(user=user)
+
     own_book = list(OwnedBook.objects.filter(user=user))
 
     data = []
 
     for buku in own_book:
         buku_asli = Book.objects.get(pk=buku.owned_book.pk)
+
         each_data = {
             'pk': buku.pk,
             'thumbnail': buku_asli.thumbnail,
             'title': buku_asli.title,
+            'authors': buku_asli.authors,
             'description': buku_asli.description,
             'page_count': buku_asli.page_count,
             'page_track': buku.page_track,
             'ulasan': buku.ulasan,
             'status': buku.status,
+            'publish_date': buku_asli.published_date.strftime("%Y-%m-%d"),
         }
         if each_data['status'] == 'W':
             each_data['status'] = 'Wishlist'
         elif each_data['status'] == 'F':
-            each_data['status'] = 'Finish'
+            each_data['status'] = 'Finished'
         else:
             each_data['status'] = 'Reading'
         data.append(each_data)
 
     return HttpResponse(json.dumps(data), content_type="application/json")
+
 
 @csrf_exempt
 def add_page_track(request):
@@ -137,15 +212,28 @@ def add_page_track(request):
 
     if buku.page_track < buku_asli.page_count:
         buku.page_track += 1
+        buku.status = 'R'
         buku.save()
+
+    if buku.page_track == buku_asli.page_count:
+        buku.status = 'F'
+        buku.save()
+
     return HttpResponse(status=200)
+
 
 @csrf_exempt
 def sub_page_track(request):
     data = json.loads(request.body.decode("utf-8"))
     buku = OwnedBook.objects.get(pk=data["pk"])
+    buku_asli = Book.objects.get(pk=buku.owned_book.pk)
 
     if buku.page_track > 0:
         buku.page_track -= 1
         buku.save()
+
+    if buku.page_track < buku_asli.page_count and buku.page_track != 0:
+        buku.status = 'R'
+        buku.save()
+
     return HttpResponse(status=200)

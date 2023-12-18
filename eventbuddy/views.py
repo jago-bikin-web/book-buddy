@@ -1,4 +1,5 @@
-from django.http import HttpResponse, HttpResponseNotFound
+import json
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 from book.models import Book
 from eventbuddy.models import Event
@@ -10,6 +11,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from main.models import Profile
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+
 
 @login_required(login_url='main:login')
 def show_eventbuddy(request):
@@ -38,9 +41,12 @@ def create_event(request):
                 event.user = request.user
                 event.save()
                 return HttpResponse(b"CREATED", status=201)
-
         else:
             return HttpResponseNotFound()
+        
+def show_json(request):
+    data = Event.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 @login_required(login_url='main:login')
 def get_event_json(request):
@@ -125,4 +131,81 @@ def add_event_ajax(request):
             return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
-# Create your views here.
+
+@csrf_exempt
+def create_event_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+        book_pk = data.get("pkBook")
+        book = Book.objects.get(pk = book_pk)
+        user = data.get("username")
+        user = User.objects.get(username = user)
+        name = data.get("name")
+        date = data.get("date")
+        description = data.get("description")
+
+
+        new_event = Event.objects.create(
+            user=user,
+            book=book,
+            name=name,
+            date=date,
+            description=description,
+        )
+
+        new_event.save()
+
+        return JsonResponse({"status": True}, status=200)
+    else:
+        return JsonResponse({"status": False}, status=401)
+
+@csrf_exempt
+def regis_flutter(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        event_pk = data.get("id")
+        events = Event.objects.get(pk = event_pk)
+        user = data.get("username")
+        user = User.objects.get(username = user)
+        profile = request.user.profile
+
+        if request.user != events.user:
+            if events.participant.filter(pk=profile.pk).exists():
+                return JsonResponse({"status": 1}, status=401)
+            else:
+                events.participant.add(profile)
+                return JsonResponse({"status": 2}, status=200)
+        else:
+            return JsonResponse({"status": 3}, status=401)
+
+def get_event_flutter(request):
+    events = Event.objects.all()
+    list_event = []
+
+    for e in events:
+        book = Book.objects.get(pk=e.book.pk)
+        user_event = Profile.objects.get(user=e.user)
+        
+        participants_list = []
+        for participant in e.participant.all():
+            participant_item = {
+                "participant_name": participant.full_name,
+                # tambahkan atribut lain sesuai kebutuhan
+            }
+            participants_list.append(participant_item)
+
+        event_item = {
+            "event_pk": e.pk, 
+            "book_thumbnail": book.thumbnail,
+            "event_name": e.name,
+            "event_description": e.description,
+            "event_date": e.date.strftime("%Y-%m-%d"),
+            "event_user_fullname": user_event.full_name,
+            "event_username": user_event.user.username,
+            "event_participants": participants_list,
+        }
+        list_event.append(event_item)
+
+    return JsonResponse(list_event, safe=False)

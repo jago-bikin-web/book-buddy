@@ -8,4 +8,6 @@ urlpatterns = [
     path('get-books/', get_books, name='get_book'),
     path('get-random/', get_random_books, name='get_random_books'),
     path('search-books/', get_search_books, name='get_search_books'),
+    path('get-50-books/', get_50_random_books, name='get_50_random_books'),
+    path('get-category/', list_category, name='list_category'),
 ]

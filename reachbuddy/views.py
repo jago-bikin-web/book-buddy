@@ -1,5 +1,6 @@
+import json
 from django.shortcuts import render
-from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from reachbuddy.models import Thread
 from main.models import Profile
@@ -89,6 +90,62 @@ def get_threads_json(request):
     all_threads = Thread.objects.all()
     return HttpResponse(serializers.serialize('json', all_threads))
 
+def get_book_json_id_flutter(request, id):
+    chosen_book = Book.objects.get(pk=id)
+    return HttpResponse(serializers.serialize('json', [chosen_book]))
+
+def get_threads_flutter(request):
+    threads = Thread.objects.all()
+    threads_posts = []
+
+    for thread in threads:
+        book = Book.objects.get(id=thread.book.pk)
+        user_profile = Profile.objects.get(user=thread.user)
+        
+        thread_item = {
+            'book_id': book.pk,
+            'book_title': book.title,
+            'book_image': book.thumbnail,
+            'book_author': book.authors,
+            'book_published': book.published_date,
+            'book_page': book.page_count,
+
+            'profile_image': user_profile.profile_picture,
+            'profile_name': thread.user.username,
+            'date': thread.date_added,
+            'review': thread.review,
+            'likes': thread.likes,
+
+            'thread_id': thread.pk,
+        }
+        threads_posts.append(thread_item)
+
+    return JsonResponse(threads_posts, safe=False)
+
+def get_thread_detail_flutter(request, id):
+    thread = Thread.objects.get(pk=id)
+
+    book = Book.objects.get(id=thread.book.pk)
+    user_profile = Profile.objects.get(user=thread.user)
+    
+    thread_item = {
+        'book_title': book.title,
+        'book_image': book.thumbnail,
+        'book_author': book.authors,
+        'book_published': book.published_date,
+        'book_page': book.page_count,
+
+        'profile_image': user_profile.profile_picture,
+        'profile_name': thread.user.username,
+        'date': thread.date_added,
+        'review': thread.review,
+        'likes': thread.likes,
+
+        'thread_id': thread.pk,
+    }
+
+    return JsonResponse(thread_item, safe=False)
+
 # def get_book_json_by_id(request, book_id):
 #     try:
 #         chosen_book = Book.objects.get(book_id=book_id)
@@ -123,3 +180,26 @@ def delete_thread_ajax(request, id):
         return HttpResponse(b"DELETED", status=200)
     
     return HttpResponseNotFound()
+
+@csrf_exempt
+def create_thread_flutter(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+        book_pk = data.get("pkBook")
+        book = Book.objects.get(pk = book_pk)
+        user = data.get("username")
+        user = User.objects.get(username = user)
+        review = data.get("review")
+
+        new_thread = Thread.objects.create(
+            user=user,
+            book=book,
+            review=review,
+        )
+
+        new_thread.save()
+
+        return JsonResponse({"status": True}, status=200)
+    else:
+        return JsonResponse({"status": False}, status=401)
