@@ -91,7 +91,7 @@ def add_book_flutter(request):
         user = User.objects.get(username=data["username"]);
         user_asli = Profile.objects.get(user=user)
 
-        book_have = OwnedBook.objects.filter(owned_book=book);
+        book_have = OwnedBook.objects.filter(owned_book=book, user=user_asli);
 
         
         if len(book_have) == 0:
