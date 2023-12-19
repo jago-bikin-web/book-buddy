@@ -139,6 +139,14 @@ def create_event_flutter(request):
         data = json.loads(request.body)
         book_pk = data.get("pkBook")
         book = Book.objects.get(pk = book_pk)
+
+        events = Event.objects.all()
+
+        for e in events:
+            already_book = Book.objects.get(pk=e.book.pk)
+            if already_book.title == book.title:
+                return JsonResponse({"status": False}, status=401)
+
         user = data.get("username")
         user = User.objects.get(username = user)
         name = data.get("name")
@@ -209,3 +217,19 @@ def get_event_flutter(request):
         list_event.append(event_item)
 
     return JsonResponse(list_event, safe=False)
+
+@csrf_exempt
+def delete_flutter(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        event_pk = data.get("id")
+        events = Event.objects.get(pk = event_pk)
+        user_name = data.get("username")
+        user = User.objects.get(username = user_name)
+
+        if user == events.user:
+            events.delete()
+        return JsonResponse({"status": True}, status=200)
+    else:
+        return JsonResponse({"status": False}, status=401)
