@@ -112,10 +112,15 @@ def register(request: HttpRequest):
 
 @csrf_exempt
 def logout(request: HttpRequest):
-    full_name = Profile.objects.get(user=request.user).full_name
-    auth_logout(request)
-    return JsonResponse({
-        "fullName": full_name,
-        "status": True,
-        "message": "Logout berhasil!"
-    }, status=200)
+    try:
+        full_name = Profile.objects.get(user=request.user).full_name
+        auth_logout(request)
+        return JsonResponse({
+            "fullName": full_name,
+            "status": True,
+            "message": "Logout berhasil!"
+        }, status=200)
+    except:
+        JsonResponse({
+            "status": False
+        }, status=500)
