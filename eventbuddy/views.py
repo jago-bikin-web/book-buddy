@@ -230,6 +230,7 @@ def delete_flutter(request):
 
         if user == events.user:
             events.delete()
-        return JsonResponse({"status": True}, status=200)
+            return JsonResponse({"status": True}, status=200)
+        return JsonResponse({"status": False}, status=401)
     else:
         return JsonResponse({"status": False}, status=401)
