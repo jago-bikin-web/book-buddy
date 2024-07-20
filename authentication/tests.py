@@ -3,7 +3,6 @@ from django.urls import reverse
 
 # Create your tests here.
 
-
 class AppTest(TestCase):
     # ----------------- Test Authenticated ----------------- #
     def test_aman(self):
@@ -18,6 +17,10 @@ class AppTest(TestCase):
 
         self.assertEqual(response.json(), {
             "username": "test",
+            "fullName": "test",
+            "userId": 1,
+            "email": "test",
+            "role": "M",
             "status": True,
-            "message": "Register sukses!"
+            "message": "Register dan login berhasil!"
         })
