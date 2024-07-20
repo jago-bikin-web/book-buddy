@@ -83,7 +83,6 @@ def register(request: HttpRequest):
                         "userId": user.pk,
                         "email": email,
                         "role": status,
-                        "profilePicture": new_user.profile_picture,
                         "status": True,
                         "message": "Register dan login berhasil!"
                     }, status=200)
