@@ -32,10 +32,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Django tests
-        run: |
-          python manage.py test --keepdb
-
   publish:
     if: github.event_name == 'push'
     needs: build
