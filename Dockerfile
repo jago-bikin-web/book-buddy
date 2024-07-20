@@ -1,32 +1,44 @@
-FROM python:3.10-slim-buster
+# Use the official Python image as the base image
+FROM python:3.9-slim
 
-WORKDIR /app
+# Menggunakan variabel lingkungan sebagai build argument
+ARG DATABASE_NAME
+ARG DATABASE_USER
+ARG DATABASE_PASSWORD
+ARG DATABASE_HOST
+ARG DATABASE_PORT
+ARG SECRET_KEY
+ARG ENVIRONMENT
 
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app \
-    DJANGO_SETTINGS_MODULE=book_buddy.settings \
-    PORT=8000 \
-    WEB_CONCURRENCY=2
+# Set nilai variabel lingkungan dalam lingkungan Docker
+ENV DATABASE_NAME=$DATABASE_NAME
+ENV DATABASE_USER=$DATABASE_USER
+ENV DATABASE_PASSWORD=$DATABASE_PASSWORD
+ENV DATABASE_HOST=$DATABASE_HOST
+ENV DATABASE_PORT=$DATABASE_PORT
+ENV SECRET_KEY=$SECRET_KEY
+ENV ENVIRONMENT=$ENVIRONMENT
 
-# Install system packages required Django.
-RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
-&& rm -rf /var/lib/apt/lists/*
+# Set the working directory in the container
+WORKDIR /docker-app
 
-RUN addgroup --system django \
-    && adduser --system --ingroup django django
+# Copy the requirements file into the container at /docker-app
+COPY requirements.txt /docker-app/
 
-# Requirements are installed here to ensure they will be cached.
-COPY ./requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+# Install any dependencies specified in requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy project code
-COPY . .
+# Copy the current directory contents into the container at /docker-app
+COPY . /docker-app/
 
-RUN python manage.py collectstatic --noinput --clear
+# Expose port 8000 to the outside world
+EXPOSE 8000
 
-# Run as non-root user
-RUN chown -R django:django /app
-USER django
+# Collect static for better visualization
+RUN python manage.py collectstatic
 
-# Run application
-# CMD gunicorn book_buddy.wsgi:application
+# Run migrate DB
+RUN python manage.py migrate
+
+# Jalankan Gunicorn
+CMD ["gunicorn", "app.nani.wsgi", "--bind", "0.0.0.0:8000"]

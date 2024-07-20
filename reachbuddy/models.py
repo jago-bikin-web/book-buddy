@@ -6,8 +6,11 @@ from book.models import Book
 
 class Thread(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name='thread_like')
+
     review = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
-    likes = models.IntegerField(default=0)
+
+    def number_of_likes(self):
+        return self.likes.count()

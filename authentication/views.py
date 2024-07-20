@@ -62,6 +62,7 @@ def register(request: HttpRequest):
         status = data.get("status")
         password1 = data.get("password1")
         password2 = data.get("password2")
+        print("sampe sini")
 
         if password1 == password2:
             try:
@@ -69,6 +70,7 @@ def register(request: HttpRequest):
                 if len(user) == 0:
                     user = User.objects.create_user(
                         username=username, password=password1)
+                    print("sampe sini")
 
                     new_user = Profile(user=user, full_name=full_name, email=email, status=status,
                                        profile_picture=f"https://i.pravatar.cc/48?img={randint(1, 70)}")
