@@ -1,8 +1,11 @@
 name: Deploy Django to GCP with Docker - Production
 on:
   push:
-  branches:
-    - main
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 env:
   DATABASE_NAME: ${{ secrets.DATABASE_NAME_PRODUCTION }}
   DATABASE_USER: ${{ secrets.DATABASE_USER_PRODUCTION }}
@@ -34,7 +37,8 @@ jobs:
           python manage.py test --keepdb
 
   publish:
-    needs: test
+    if: github.event_name == 'push'
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -69,6 +73,7 @@ jobs:
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
 
   deploy:
+    if: github.event_name == 'push'
     needs: publish
     runs-on: ubuntu-latest
     steps:
