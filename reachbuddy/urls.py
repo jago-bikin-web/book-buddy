@@ -16,6 +16,7 @@ urlpatterns = [
     path('get_book_json_id/<int:id>/', get_book_json_id, name='get_book_json_id'),
     path('get_profile_json_id/<int:id>/', get_profile_json_id, name='get_profile_json_id'),
     path('create_thread_ajax/<int:id>/', create_thread_ajax, name='create_thread_ajax'),
+    path('thread_like/<int:id>/', thread_like, name='thread_like'),
     path('delete_thread_ajax/<int:id>/', delete_thread_ajax, name='delete_thread_ajax'),
     path('get-threads-flutter/', get_threads_flutter, name='get_threads_flutter'),
     path('get-thread-detail-flutter/<int:id>/', get_thread_detail_flutter, name='get_thread_detail_flutter'),

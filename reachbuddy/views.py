@@ -1,5 +1,5 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from reachbuddy.models import Thread
@@ -22,6 +22,7 @@ def show_reachbuddy(request):
     profile_picture = user.profile_picture
 
     context = {
+        'user_pk': user.pk,
         'user': user.full_name,
         'profile_picture': profile_picture,
         'threads': threads
@@ -49,6 +50,22 @@ def create_thread(request):
 
     }
     return render(request, "create_thread.html", context)
+
+@login_required(login_url='main:login')
+@csrf_exempt
+def thread_like(request, id):
+    if request.method == 'POST':
+        post = get_object_or_404(Thread, pk=id)
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user) #unlike
+            print(f"post {id} di-unlike")
+            print(f"total like: {post.number_of_likes()}")
+        else:
+            post.likes.add(request.user) #like
+            print(f"post {id} di-like")
+            print(f"total like: {post.number_of_likes()}")
+        return JsonResponse({"status": "success", "liked": not post.likes.filter(id=request.user.id).exists()})
+    return JsonResponse({"status": "failed"}, status=400)
 
 def show_json(request):
     data = Thread.objects.all()
@@ -89,6 +106,8 @@ def get_book_json_id(request, id):
 def get_threads_json(request):
     all_threads = Thread.objects.all()
     return HttpResponse(serializers.serialize('json', all_threads))
+
+#UNTUK FLUTTER ##########################################################################
 
 def get_book_json_id_flutter(request, id):
     chosen_book = Book.objects.get(pk=id)
