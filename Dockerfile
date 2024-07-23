@@ -34,11 +34,5 @@ COPY . /docker-app/
 # Expose port 8000 to the outside world
 EXPOSE 8000
 
-# Collect static for better visualization
-RUN python manage.py collectstatic
-
-# Run migrate DB
-RUN python manage.py migrate
-
-# Jalankan Gunicorn
-CMD ["gunicorn", "app.nani.wsgi", "--bind", "0.0.0.0:8000"]
+# Perbarui untuk menjalankan perintah sebagai bagian dari ENTRYPOINT
+ENTRYPOINT ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn book_buddy.wsgi:application --bind 0.0.0.0:8000"]
