@@ -99,7 +99,7 @@ CORS_ALLOW_HEADERS = [
     'access-control-allow-origin',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://books-buddy-e06-tk.pbp.cs.ui.ac.id']
+CSRF_TRUSTED_ORIGINS = ['http://books-buddy.org']
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
