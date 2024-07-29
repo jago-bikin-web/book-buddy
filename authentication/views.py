@@ -62,7 +62,6 @@ def register(request: HttpRequest):
         status = data.get("status")
         password1 = data.get("password1")
         password2 = data.get("password2")
-        print("sampe sini")
 
         if password1 == password2:
             try:
